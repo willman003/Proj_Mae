@@ -3,14 +3,46 @@
 {% block title %} Trang chủ {% endblock %}
 
 {% block content %}
-    <div class="container-fluid" style ="border: 2px solid black;">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Trang chủ</h1>
+<div class="container" style="margin-top: 100px; background-color: white; padding: 20px 20px; border-radius: 10px; margin-bottom: 100px;">
+    <div class="row">
+        <div class="col-md-4">
+            <img height="300px" src="{{san_pham.hinh_anh}}" class="card-img-top" alt="hinh_{{san_pham.ten_san_pham}}">
+        </div>
+        <div class="col-md-8">
+            <h3>{{san_pham.ten_san_pham}}</h3>
+            <p>{{thong_bao}}</p>
+            <p>{{chi_tiet['xuat_xu']}}</p>
+            <p>{{chi_tiet['dung_tich']}}</p>
+            <p>{{chi_tiet['cong_dung']}}</p>
+            <form method="POST">
+                <div class="row">
+                    <div class="col-md-3">
+                        {{form_mua_hang.hidden_tag()}}
+                        {{form_mua_hang.so_luong(class="form-control", step="1", type="number", value="1", min="1")}}
+                    </div>
+                    <div class="col">
+                        {{form_mua_hang.submit(class="btn", style="background-color: #C7ADF5;")}}
+                    </div>
 
-            </div>
+                </div>
+                
+                
+            </form>
+
         </div>
     </div>
-    
+    <div class="row">
+        <div class="col-md-12">
+            <hr>
+        </div>
+        <div class="col-md-12 text-center">
+            <h3>MÔ TẢ CHI TIẾT</h3>
+        </div>
+        <div class="col-md-12 mo-ta">
+            {{mo_ta_dai}}
+        </div>
+    </div>
+</div>
+
 
 {% endblock %}
