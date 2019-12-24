@@ -1,0 +1,41 @@
+<div class="container-fluid">
+    <div class="row">
+        <nav class="d-flex justify--between navbar navbar-expand-lg navbar-light" style="background-color: white; width: 100%;">
+            <a class="navbar-brand" href="#"><img width="150px"src="/static/images/logo.png" alt="logo"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav item text-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Sản phẩm
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            {%for category in danh_sach_category%}
+                            <a class="dropdown-item" href="/loai_{{category.ma_loai}}">&#9830; {{category.ten_loai}} {%if id == category.ma_loai%}&#9806;{%endif%}</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cau-chuyen-cua-mae">Câu chuyện của Mae Cosmetics <i
+                                class="fas fa-feather-alt"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mae-beauty-blog">Beauty Cookbook by Mae</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Đăng nhập <i class="fas fa-user"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Giỏ hàng <i class="fas fa-cart-arrow-down"></i></a>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>
