@@ -10,17 +10,17 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
-        body{
-            background-color: 	#C7ADF5;
+        body {
+            background-color: #C7ADF5;
         }
-        #dangnhap{
+
+        #dangnhap {
             position: relative;
             /* left: 100px; */
             top: 150px;
             padding: 20px 20px;
             border-radius: 10px;
         }
-       
     </style>
     <script src="https://kit.fontawesome.com/87d1385e4d.js" crossorigin="anonymous"></script>
 
@@ -28,39 +28,70 @@
 </head>
 
 <body>
-    
+
     <div class="container" id="dangnhap" style="color: #5516C0;background-color: white;">
         <h1 class="text-center">Đăng ký</h1>
         <hr class="col-md-12" style="border-top: 1px solid white; width: 100%;">
-        <form method = 'POST'>
+        <form method="POST">
             {{form.hidden_tag()}}
             <div class="form-group">
                 {{form.ho_ten.label(for='ho_ten')}}
                 {{form.ho_ten(class='form-control')}}
-             
+
             </div>
             <div class="form-group">
                 {{form.email.label(for='email')}}
                 {{form.email(class='form-control')}}
-             
+
+            </div>
+            <div class="form-group">
+                {{form.gioi_tinh.label(for='gioi_tinh')}}
+                {{form.gioi_tinh()}}
+
+            </div>
+            <div class="form-group">
+                {{form.ngay_sinh.label(for='ngay_sinh')}}
+                {{form.ngay_sinh(class='form-control')}}
+
+            </div>
+            <div class="form-group">
+                {{form.dia_chi.label(for='dia_chi')}}
+                {{form.dia_chi(class='form-control')}}
+
+            </div>
+            <div class="form-group">
+                {{form.dien_thoai.label(for='dien_thoai')}}
+                {{form.dien_thoai(class='form-control')}}
+
             </div>
             <div class="form-group">
                 {{form.ten_dang_nhap.label(for='ten_dang_nhap')}}
                 {{form.ten_dang_nhap(class='form-control')}}
-             
+
             </div>
             <div class="form-group">
                 {{form.mat_khau.label(for='mat_khau')}}
                 {{form.mat_khau(class='form-control')}}
-             
+
             </div>
-            
+            <div class="form-group">
+                {% if form.errors %}
+                <ul class=errors>
+                    {% for error in form.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+            </div>
+
+
             <!-- <div class="form-group form-check">
               <input type="checkbox" class="form-check-input" id="exampleCheck1">
               <label class="form-check-label" for="exampleCheck1">Check me out</label>
             </div> -->
-            <button type="submit" class="btn" style = "color: white; background-color: 	#5516C0;">Đăng nhập</button>
-          </form>
+            <button type="submit" class="btn" style="color: white; background-color: 	#5516C0;">Đăng ký</button>
+        </form>
     </div>
 
     <!-- Optional JavaScript -->

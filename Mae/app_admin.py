@@ -37,16 +37,20 @@ def user_register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = Form_dang_ky()
+    print(form.validate_on_submit())
     if form.validate_on_submit():
+        form.validate_ten_dang_nhap(form.ten_dang_nhap.data)
         user = Nguoi_dung()
         form.populate_obj(user)
         user.ho_ten = form.ho_ten.data
         user.ten_dang_nhap = form.ten_dang_nhap.data
         user.email = form.email.data
         user.mat_khau_hash = generate_password_hash(form.mat_khau.data)
-        user.ma_loai_nguoi_dung = 1
+        user.ma_loai_nguoi_dung = 2
         dbSession.add(user)
         dbSession.commit()
+        form.tao_khach_hang()
         login.login_user(user)
         return redirect(url_for('index'))
+    
     return render_template('Quan_ly/MH_Dang_ky.html',form = form)
