@@ -72,7 +72,7 @@ class Nguoi_dung(Base):
         return False
     
     def get_id(self):
-        return self.id
+        return self.ma_nguoi_dung
 
     def __unicode__(self):
         return self.ho_ten
@@ -196,3 +196,4 @@ engine = create_engine('sqlite:///Mae/du_lieu/ql_mae.db?check_same_thread=False'
 Base.metadata.create_all(engine)
 
 print('Done!')
+

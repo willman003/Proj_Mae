@@ -3,6 +3,7 @@ from flask import Flask
 
 
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "Impossible to guess"
 
@@ -13,7 +14,8 @@ app.config['SQLALCHEMY_ECHO'] = True
 
 # db = SQLAlchemy(app)
 
+
 import Mae.xu_ly.Xu_ly_Model
 import Mae.app_Web_ban_hang
 import Mae.app_Quan_ly
-import Mae.app_log_in
+import Mae.app_admin

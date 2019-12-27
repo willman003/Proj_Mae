@@ -30,19 +30,29 @@
 <body>
     
     <div class="container" id="dangnhap" style="color: #5516C0;background-color: white;">
-        <h1 class="text-center">Đăng nhập</h1>
+        <h1 class="text-center">Đăng ký</h1>
         <hr class="col-md-12" style="border-top: 1px solid white; width: 100%;">
         <form method = 'POST'>
-            {{form_dang_nhap.hidden_tag()}}
+            {{form.hidden_tag()}}
             <div class="form-group">
-                {{form_dang_nhap.ten_dang_nhap.label(for='ten_dang_nhap')}}
-                {{form_dang_nhap.ten_dang_nhap(class='form-control')}}
-              
+                {{form.ho_ten.label(for='ho_ten')}}
+                {{form.ho_ten(class='form-control')}}
+             
             </div>
             <div class="form-group">
-                {{form_dang_nhap.password.label(for='password')}}
-                {{form_dang_nhap.password(class='form-control')}}
-              
+                {{form.email.label(for='email')}}
+                {{form.email(class='form-control')}}
+             
+            </div>
+            <div class="form-group">
+                {{form.ten_dang_nhap.label(for='ten_dang_nhap')}}
+                {{form.ten_dang_nhap(class='form-control')}}
+             
+            </div>
+            <div class="form-group">
+                {{form.mat_khau.label(for='mat_khau')}}
+                {{form.mat_khau(class='form-control')}}
+             
             </div>
             
             <!-- <div class="form-group form-check">
