@@ -4,7 +4,7 @@ from Mae.xu_ly.Xu_ly_Model import *
 from Mae.xu_ly.Xu_ly import *
 from Mae.xu_ly.Xu_ly_Form import *
 
-from flask import Flask, render_template, Markup, session
+from flask import Flask, render_template, Markup, session, redirect, url_for
 from sqlalchemy.orm import sessionmaker
 
 Base.metadata.bind = engine
@@ -13,7 +13,7 @@ db_session = DBSession()
 
 @app.route('/',methods=['GET','POST'])
 def index():
-       
+    
     danh_sach_category = db_session.query(Loai_san_pham).all()
     
     return render_template('Web/index.html', danh_sach_category = danh_sach_category)
@@ -36,6 +36,10 @@ def san_pham(id):
 
 @app.route('/chi-tiet/sp_<int:ma_sp>',methods = ['GET','POST'])
 def chi_tiet_san_pham(ma_sp):
+    if session.get('Gio_hang') == None:
+        gio_hang = []
+    else:
+        gio_hang = session['Gio_hang']
     form_mua_hang = Form_mua_hang()
 
     danh_sach_category = db_session.query(Loai_san_pham).all()
@@ -52,6 +56,57 @@ def chi_tiet_san_pham(ma_sp):
         chi_tiet['dung_tich'] = chuoi_temp_1[2]
     else:
         chi_tiet = ''
-                
+    if form_mua_hang.validate_on_submit():
+        for item in gio_hang:
+            if item['ma_sp'] == ma_sp:
+                item['so_luong'] = form_mua_hang.so_luong.data
+                break
+        else:
+            sp_don_hang = {}
+            sp_don_hang['ma_sp'] = ma_sp
+            sp_don_hang['ten_sp'] = san_pham.ten_san_pham
+            sp_don_hang['gia_ban'] = "{:,}".format(san_pham.gia_ban)
+            sp_don_hang['so_luong'] = form_mua_hang.so_luong.data
+            gio_hang.append(sp_don_hang)
+        session['Gio_hang'] = gio_hang
+
     return render_template('Web/Chi_tiet_san_pham.html', form_mua_hang = form_mua_hang, mo_ta_dai = mo_ta_dai, chi_tiet = chi_tiet, san_pham = san_pham, danh_sach_category = danh_sach_category)
 
+@app.route('/xem-gio-hang', methods = ['GET','POST'])
+def xem_gio_hang():
+    
+    form = Form_mua_hang()
+    danh_sach_category = db_session.query(Loai_san_pham).all()
+    tong_tien = 0
+    for item in session['Gio_hang']:
+        gia_ban_convert = item['gia_ban'].split(',')
+        gia_ban = gia_ban_convert[0]
+        tong_tien += (int(gia_ban) * 1000 * int(item['so_luong']))
+    
+    tong_tien = "{:,}".format(tong_tien)
+    return render_template('Web/Shopping_Cart.html', form = form, danh_sach_category = danh_sach_category, tong_tien = tong_tien)
+
+@app.route('/xem-gio-hang/xoa/sp_<int:ma_sp>', methods =['GET'])
+def xoa_gio_hang(ma_sp):
+    gio_hang = session['Gio_hang']
+      
+    for item in gio_hang:
+        if item['ma_sp'] == ma_sp:
+            session['Gio_hang'].remove(item)
+            break
+    session['Gio_hang'] = gio_hang
+    
+    return redirect(url_for('xem_gio_hang'))
+
+@app.route('/xem-gio-hang/cap-nhat/sp_<int:ma_sp>', methods = ['GET','POST'])
+def cap_nhat_gio_hang(ma_sp):
+    form = Form_mua_hang()
+    gio_hang = session['Gio_hang']
+    if form.validate_on_submit():
+        for item in gio_hang:
+            if item['ma_sp'] == ma_sp:
+                item['so_luong'] = form.so_luong.data
+                break
+    session['Gio_hang'] = gio_hang      
+    print(session['Gio_hang'])   
+    return redirect(url_for('xem_gio_hang'))

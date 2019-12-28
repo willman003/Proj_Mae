@@ -1,6 +1,6 @@
 from Mae import app
 
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, session
 
 from flask_login import current_user, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -29,6 +29,7 @@ def log_in():
 
 @app.route('/dang-xuat',methods = ['GET','POST'])
 def log_out():
+    session.clear()
     login.logout_user()
     return redirect(url_for('index'))
 

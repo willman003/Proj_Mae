@@ -1,0 +1,88 @@
+{%extends 'layout/master.html'%}
+{%block title%} Xem giỏ hàng {%endblock%}
+{%block content%}
+<div class="container-fluid" style="margin: 50px auto; padding: 20px 20px; border-radius: 10px;">
+    <div class="row">
+        <div class="col-md-8" style="padding: 10px 5px; border-radius: 10px; background-color: white;">
+            <div class=" row">
+                <div class="col-md-12 text-center">
+                    <h2> Giỏ hàng</h2>
+                    <p><small>{{session['Gio_hang']|length}} sản phẩm</small></p>
+                    
+                </div>
+
+            </div>
+
+            <div class="col-md-12">
+                <table class="table">
+                    <thead style="background-color: #C7ADF5;">
+                        <tr>
+                            <th scope="col">STT</th>
+                            <th scope="col">Tên sản phẩm</th>
+                            <th scope="col">Giá tiền</th>
+                            <th scope="col">Số lượng</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for item in session['Gio_hang']%}
+
+                        <tr>
+                            <th scope="row">{{loop.index}}</th>
+                            <td>{{item['ten_sp']}} <p><a href="/chi-tiet/sp_{{item['ma_sp']}}"><small>Xem chi
+                                            tiết</small></a></p>
+                            </td>
+                            <td>{{item['gia_ban']}}</td>
+                            <td>
+                                <form method="POST" class="form-inline"
+                                    action="{{url_for('cap_nhat_gio_hang', ma_sp = item['ma_sp'])}}">
+                                    {{form.hidden_tag()}}
+                                    {{form.so_luong(class="form-control text-center", value=item['so_luong'], style="width: 60px;")}}
+                                    <button title="Cập nhật số lượng" class="btn"
+                                        href="xem-gio-hang/cap-nhat/sp_{{item['ma_sp']}}" type="submit"><i
+                                            class="fas fa-sync-alt"
+                                            style="margin: auto 30px; background-color: white;"></i></button>
+                                    <a title="Xóa" href="xem-gio-hang/xoa/sp_{{item['ma_sp']}}"><i
+                                            class="far fa-trash-alt"></i></a>
+                                </form>
+
+                            </td>
+
+                        </tr>
+
+                        {%endfor%}
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="row" style="width: 90%; margin: auto 20px; padding: 10px 10px;color: black; background-color: #FDE58B; border-radius: 10px;">
+                <div class="col-md-12">
+                    <h2>Tổng cộng</h2>
+                    <hr>
+                </div>
+                <div class="col-md-12">
+                    <p >Tổng tiền: {{tong_tien}} VND</p>
+                    <p>
+                        Phí ship: 0 VND
+                    </p>
+                    <p>
+                        Mã khuyến mãi: - 0 VND
+                    </p>
+                    <hr>
+                </div>
+                <div class="col-md-12">
+                    <p> Thành tiền </p>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+    </div>
+</div>
+{%endblock%}

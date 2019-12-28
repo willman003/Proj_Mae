@@ -10,17 +10,27 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <style>
-        body{
-            background-color: 	#C7ADF5;
+        body {
+            background-color: #C7ADF5;
         }
-        #dangnhap{
+
+        #dangnhap {
             position: relative;
             /* left: 100px; */
-            top: 150px;
+            top: 25vh;
+            width: 30%;
             padding: 20px 20px;
             border-radius: 10px;
         }
-       
+
+        form a:link {
+            color: #5516C0;
+            /* text-decoration: none; */
+        }
+
+        form a:hover {
+            color: #BF01F9
+        }
     </style>
     <script src="https://kit.fontawesome.com/87d1385e4d.js" crossorigin="anonymous"></script>
 
@@ -28,32 +38,32 @@
 </head>
 
 <body>
-    
+
     <div class="container" id="dangnhap" style="color: #5516C0;background-color: white;">
-        <h1 class="text-center">Đăng nhập</h1>
+        <h2 class="text-center"><b>Đăng nhập</b></h2>
         <hr class="col-md-12" style="border-top: 1px solid white; width: 100%;">
-        <form method = 'POST'>
+        <form method='POST'>
             {{form_dang_nhap.hidden_tag()}}
             <div class="form-group">
                 {{form_dang_nhap.ten_dang_nhap.label(for='ten_dang_nhap')}}
                 {{form_dang_nhap.ten_dang_nhap(class='form-control')}}
-              
+
             </div>
             <div class="form-group">
                 {{form_dang_nhap.password.label(for='password')}}
                 {{form_dang_nhap.password(class='form-control')}}
-              
+
             </div>
             <div class="form-group">
-                <small>Chưa có tài khoản ? <a href = "/dang-ky"> Đăng ký </a></small>
+                <small>Chưa có tài khoản ? <a href="/dang-ky"> Đăng ký </a></small>
             </div>
-            
+
             <!-- <div class="form-group form-check">
               <input type="checkbox" class="form-check-input" id="exampleCheck1">
               <label class="form-check-label" for="exampleCheck1">Check me out</label>
             </div> -->
-            <button type="submit" class="btn" style = "color: white; background-color: 	#5516C0;">Đăng nhập</button>
-          </form>
+            <button type="submit" class="btn" style="color: white; background-color: 	#5516C0;">Đăng nhập</button>
+        </form>
     </div>
 
     <!-- Optional JavaScript -->
