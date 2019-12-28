@@ -14,20 +14,24 @@
             <p>{{chi_tiet['xuat_xu']}}</p>
             <p>{{chi_tiet['dung_tich']}}</p>
             <p>{{chi_tiet['cong_dung']}}</p>
-            <form method="POST">
-                <div class="row">
-                    <div class="col-md-3">
-                        {{form_mua_hang.hidden_tag()}}
-                        {{form_mua_hang.so_luong(class="form-control", step="1", type="number", value="1", min="1")}}
-                    </div>
-                    <div class="col">
-                        {{form_mua_hang.submit(class="btn", style="background-color: #C7ADF5;")}}
-                    </div>
-
-                </div>
-                
-                
-            </form>
+            <h4  style="color: #8850EA;">{{san_pham.gia_ban/1000}}00 VND</h4>
+            <p>
+                <form method="POST">
+                        <div class="row">
+                            <div class="col-md-3">
+                                {{form_mua_hang.hidden_tag()}}
+                                {{form_mua_hang.so_luong(class="form-control", step="1", type="number", value="1", min="1")}}
+                            </div>
+                            <div class="col">
+                                {{form_mua_hang.submit(class="btn", style="background-color: #C7ADF5;")}}
+                            </div>
+        
+                        </div>
+                        
+                        
+                    </form>
+            </p>
+            
 
         </div>
     </div>
