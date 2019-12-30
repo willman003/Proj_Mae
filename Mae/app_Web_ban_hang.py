@@ -4,7 +4,7 @@ from Mae.xu_ly.Xu_ly_Model import *
 from Mae.xu_ly.Xu_ly import *
 from Mae.xu_ly.Xu_ly_Form import *
 
-from flask import Flask, render_template, Markup, session, redirect, url_for, request
+from flask import Flask, render_template, Markup, session, redirect, url_for, request, flash
 from sqlalchemy.orm import sessionmaker
 from flask_login import current_user, login_user
 
@@ -64,6 +64,7 @@ def chi_tiet_san_pham(ma_sp):
         for item in gio_hang:
             if item['ma_sp'] == ma_sp:
                 item['so_luong'] = form_mua_hang.so_luong.data
+                flash('Đã cập nhật ' + item['ten_sp'] + ' vào giỏ hàng')
                 break
         else:
             sp_don_hang = {}
@@ -72,7 +73,9 @@ def chi_tiet_san_pham(ma_sp):
             sp_don_hang['gia_ban'] = "{:,}".format(san_pham.gia_ban)
             sp_don_hang['so_luong'] = form_mua_hang.so_luong.data
             gio_hang.append(sp_don_hang)
+            flash('Đã thêm '+ sp_don_hang['ten_sp'] + ' vào giỏ hàng')
         session['Gio_hang'] = gio_hang
+        
 
     return render_template('Web/Chi_tiet_san_pham.html', form_mua_hang = form_mua_hang, mo_ta_dai = mo_ta_dai, chi_tiet = chi_tiet, san_pham = san_pham, danh_sach_category = danh_sach_category)
 
