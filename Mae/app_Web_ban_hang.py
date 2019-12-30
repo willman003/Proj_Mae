@@ -8,9 +8,12 @@ from flask import Flask, render_template, Markup, session, redirect, url_for, re
 from sqlalchemy.orm import sessionmaker
 from flask_login import current_user, login_user
 
+
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 db_session = DBSession()
+
+
 
 @app.route('/',methods=['GET','POST'])
 def index():
@@ -119,6 +122,7 @@ def dat_hang():
     if not current_user.is_authenticated:
         return redirect(url_for('log_in'))
     customer = dbSession.query(Khach_hang).filter(Khach_hang.ma_nguoi_dung == current_user.ma_nguoi_dung).first()
+    
     form = Form_hoa_don()
     tong_tien = 0
     for item in session['Gio_hang']:
@@ -129,6 +133,7 @@ def dat_hang():
     if form.validate_on_submit():
         print('Success')
         ma_hoa_don = form.tao_hoa_don(customer.ma_khach_hang, tong_tien)
+        session['Ma_hoa_don'] = ma_hoa_don
         for item in session['Gio_hang']:
             don_hang = Don_hang()
             don_hang.ma_hoa_don = ma_hoa_don
@@ -144,9 +149,19 @@ def dat_hang():
 
 @app.route('/success',methods=['GET'])
 def success():
+    if session.get('Ma_hoa_don') == None:
+        return redirect(url_for('index'))
+    ma_hoa_don = session['Ma_hoa_don']
+    hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hoa_don).first()
+    customer = dbSession.query(Khach_hang).filter(Khach_hang.ma_nguoi_dung == current_user.ma_nguoi_dung).first()
+    don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == ma_hoa_don).all()
+    gui_email(ma_hoa_don,hoa_don, customer, don_hang)
+    
     return render_template('Web/Success.html')
 
 @app.route('/tiep-tuc', methods =['GET'])
 def tiep_tuc():
     session.pop('Gio_hang', None)
+    session.pop('Ma_hoa_don', None)
+    
     return redirect(url_for('index'))
