@@ -96,8 +96,10 @@ class Hoa_don(Base):
     ngay_tao_hoa_don = Column(Date, nullable = False)
     ma_khach_hang = Column(Integer, ForeignKey('khach_hang.ma_khach_hang'))
     tong_tien = Column(Float, nullable = False)
+    dia_chi_giao_hang = Column(String(200), nullable = False)
+    so_dien_thoai_nguoi_nhan = Column(String(50), nullable = False)
     khach_hang = relationship(Khach_hang, backref = 'hoa_don')
-    def __str__(self):
+    def get_id(self):
         return self.ma_hoa_don
 
 class Don_hang(Base):
@@ -110,7 +112,7 @@ class Don_hang(Base):
     hoa_don = relationship(Hoa_don, backref = 'don_hang', foreign_keys=[ma_hoa_don])
     san_pham = relationship(San_pham, backref = 'don_hang', foreign_keys=[ma_san_pham])
     
-    def __str__(self):
+    def get_id(self):
         return self.ma_hoa_don
 
 class Loai_bai_viet(Base):

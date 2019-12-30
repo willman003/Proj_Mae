@@ -1,5 +1,7 @@
 from Mae import app
 
+from datetime import datetime
+
 from flask_wtf import FlaskForm
 from wtforms import TextField, SubmitField, IntegerField, StringField, PasswordField
 from wtforms import form, fields, validators
@@ -61,6 +63,24 @@ class Form_dang_ky(FlaskForm):
         dbSession.add(customer)
         dbSession.commit()
         return
+
+class Form_hoa_don(FlaskForm):
+    ho_ten = fields.StringField('Họ tên:', [validators.required()])
+    dia_chi = fields.StringField('Địa chỉ:', [validators.required()])
+    dien_thoai = fields.StringField('Số điện thoại', [validators.required()])
+    
+    def tao_hoa_don(self, ma_khach_hang, tong_tien):
+        hoa_don = Hoa_don()
+        hoa_don.ma_khach_hang = ma_khach_hang
+        hoa_don.tong_tien = tong_tien
+        hoa_don.ngay_tao_hoa_don = datetime.now()
+        hoa_don.dia_chi_giao_hang = self.dia_chi.data
+        hoa_don.so_dien_thoai_nguoi_nhan = self.dien_thoai.data
+        dbSession.add(hoa_don)
+        dbSession.commit()
+        return hoa_don.get_id()
+    
+    
 
 def init_login():
 	login_manager = login.LoginManager()

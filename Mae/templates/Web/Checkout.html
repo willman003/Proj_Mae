@@ -1,0 +1,70 @@
+{%extends 'layout/master.html'%}
+{%block title%} Xem giỏ hàng {%endblock%}
+{%block content%}
+<div class="container-fluid" style="background-color: white;padding: auto 40px; padding-bottom: 20px; margin: 20px auto;">
+    <div class="row" style="background-color: whitesmoke;">
+        <div class="col-md-12">
+            Breadcrumb
+        </div>
+    </div>
+    <div class="row" >
+        <div class="col-md-12 text-center">
+            <h2>Thanh toán</h2>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <h4 class="text-center">Thông tin khách hàng</h4>
+            <form method="POST">
+                {{form.hidden_tag()}}
+                <div class="form-group">
+                    
+                    <label for="ho_ten">Họ tên người nhận:</label>
+                    {{form.ho_ten(class='form-control', value=customer.ten_khach_hang)}}
+                       
+                </div>
+                <div class="form-group">
+                    <label for="dia_chi">Địa chỉ giao hàng:</label>
+                    {{form.dia_chi(class='form-control', value=customer.dia_chi)}}    
+                </div>
+                <div class="form-group">
+                    <label for="dien_thoai">Số điện thoại người nhận:</label>
+                    {{form.dien_thoai(class='form-control',value=customer.dien_thoai)}}
+                </div> 
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">Hoàn tất</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <h4 class="text-center">Đơn hàng</h4>
+            {%for item in session['Gio_hang']%}
+            <div class="row">
+                <div class="col text-right">
+                    {{loop.index}}
+                </div>
+                <div class="col">
+                    {{item['ten_sp']}}
+                </div>
+                <div class="col">
+                    {{item['gia_ban']}}
+                </div>
+                <div class="col">
+                    {{item['so_luong']}}
+                </div>
+            </div>
+                       
+            {%endfor%}
+            <hr>
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    Tổng cộng: {{session['Tong_tien']}} VND
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{%endblock%}

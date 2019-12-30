@@ -1,7 +1,7 @@
 {%extends 'layout/master.html'%}
 {%block title%} Xem giỏ hàng {%endblock%}
 {%block content%}
-<div class="container-fluid" style="margin: 50px auto; padding: 20px 20px; border-radius: 10px;">
+<div class="container-fluid" style="margin: 50px auto; padding: 20px 20px;border-radius: 10px;">
     <div class="row">
         <div class="col-md-8" style="padding: 10px 5px; border-radius: 10px; background-color: white;">
             <div class=" row">
@@ -58,23 +58,24 @@
 
         </div>
         <div class="col-md-4">
-            <div class="row" style="width: 90%; margin: auto 20px; padding: 10px 10px;color: black; background-color: #FDE58B; border-radius: 10px;">
-                <div class="col-md-12">
+            <div class="row" style="width: 95%; margin: auto 5px; padding: 20px 20px;color: black; background-color: #FDE58B; border-radius: 10px;">
+                <div class="col-md-12 text-center">
                     <h2>Tổng cộng</h2>
                     <hr>
                 </div>
                 <div class="col-md-12">
-                    <p >Tổng tiền: {{tong_tien}} VND</p>
-                    <p>
-                        Phí ship: 0 VND
-                    </p>
-                    <p>
-                        Mã khuyến mãi: - 0 VND
-                    </p>
+                    <p> <span class= "col-md-2">Tổng tiền:</span> <span class="col-md-10">{{tong_tien}} VND </span></p> 
+                    <p> <span class= "col-md-4">Phí vận chuyển:</span> <span class="col-md-8">0 VND </span></p> 
+                    
+                                   
                     <hr>
                 </div>
-                <div class="col-md-12">
-                    <p> Thành tiền </p>
+                <div class="col-md-12 text-right">
+                    <p> <span class= "col-md-4">Thành tiền:</span> <span class="col-md-8">{{tong_tien}} VND </span></p>
+                    
+                </div>
+                <div class="col-md-12 text-center">
+                    <a href="/dat-hang" class="btn" style="background-color: #8850EA; color: white; border-radius: 10px; border: none;">Tiến hành đặt hàng</a>
                 </div>
             </div>
 
