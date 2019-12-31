@@ -21,7 +21,7 @@ class Loai_san_pham(Base):
     mo_ta = Column(Text)
     
     def __str__(self):
-        return self.ten_category
+        return self.ten_loai
 
 class San_pham(Base):
     __tablename__ = 'san_pham'

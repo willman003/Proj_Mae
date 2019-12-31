@@ -1,5 +1,7 @@
 from Mae import app
 
+from datetime import datetime
+
 from flask import Flask, render_template, redirect, url_for, request, session
 
 from flask_admin import Admin
@@ -27,6 +29,13 @@ class MyAdminIndexView(admin.AdminIndexView):
         if not login.current_user.is_authenticated:
             return redirect(url_for('dang_nhap'))
         return super(MyAdminIndexView, self).render('Quan_ly/manage_master.html')
+
+class admin_view(ModelView):
+    column_display_pk = True
+    can_create = True
+    can_delete = True
+    can_export = False
+
 
 
 @app.route('/cong-ty/dang-nhap',methods=['GET','POST'])
@@ -60,10 +69,36 @@ def admin():
             dia_chi_frame = "/Ql-doanh-thu"
         elif man_hinh == "Admin":
             dia_chi_frame = "/admin"
-        print(dia_chi_frame)
+        
 
     return render_template('Quan_ly/MH_Chinh.html', dia_chi_frame = dia_chi_frame)
 
+@app.route('/QL-don-hang', methods = ['GET','POST'])
+def ql_don_hang():
+    today = datetime.now()
+    ngay_hom_nay = today.date()
+    hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == ngay_hom_nay).all()
+    tieu_de = 'Đơn hàng ngày hôm nay'
+    session['dieu_khien'] = ''
+    if request.form.get('Th_hoa_don'):
+        dieu_khien = request.form.get('Th_hoa_don')
+        session['dieu_khien'] = dieu_khien
+        if dieu_khien == 'All':
+            hoa_don = dbSession.query(Hoa_don).all()
+            tieu_de = 'Tất cả đơn hàng'
+        elif dieu_khien == 'Partly':
+            if request.method == 'POST':
+                ngay_tra_cuu = request.form.get('DateInput')
+                print(ngay_tra_cuu, type(ngay_tra_cuu))
+        elif dieu_khien == 'Search':
+            pass
+        
+
+    return render_template('Quan_ly/MH_QL_don_hang.html', hoa_don = hoa_don, tieu_de = tieu_de)
+
 init_login()
-admin = Admin(app, name = "Admin", index_view=MyAdminIndexView(name="Admin"), base_template='Quan_ly/manage_master.html', template_mode='bootstrap3')
-admin.add_view(ModelView(Loai_san_pham, dbSession))
+admin = Admin(app, name = "Admin", index_view=MyAdminIndexView(name="Admin"), template_mode='bootstrap3')
+admin.add_view(admin_view(Loai_san_pham, dbSession, 'Loại sản phẩm'))
+admin.add_view(admin_view(San_pham, dbSession, 'Sản phẩm'))
+admin.add_view(admin_view(Loai_nguoi_dung, dbSession, 'Loại người dùng'))
+admin.add_view(admin_view(Nguoi_dung, dbSession, 'Người dùng'))

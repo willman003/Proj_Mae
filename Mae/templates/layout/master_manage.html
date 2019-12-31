@@ -1,0 +1,23 @@
+<!doctype html>
+    <html lang="en">
+    <head>
+        {% include 'layout/head.html' %}
+    </head>
+    
+
+    <body style="background-color: white;">
+
+        
+        <div class="content">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+        
+        
+        {% include 'layout/footer.html' %}
+
+        {% include 'layout/javascript.html' %}
+    </body>
+
+    </html>
