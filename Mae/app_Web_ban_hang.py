@@ -152,7 +152,7 @@ def dat_hang():
 
 @app.route('/success',methods=['GET'])
 def success():
-    if session.get('Ma_hoa_don') == None:
+    if session.get('Ma_hoa_don') == None or not current_user.is_authenticated:
         return redirect(url_for('index'))
     ma_hoa_don = session['Ma_hoa_don']
     hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hoa_don).first()

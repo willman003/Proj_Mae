@@ -24,7 +24,7 @@ def log_in():
         user = form_dang_nhap.get_user()
         login_user(user)
         return redirect(url_for('index'))
-        print(current_user.ho_ten)
+        
     return render_template('Quan_ly/MH_Dang_nhap.html', form_dang_nhap = form_dang_nhap)
 
 @app.route('/dang-xuat',methods = ['GET','POST'])
