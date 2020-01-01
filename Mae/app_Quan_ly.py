@@ -38,23 +38,6 @@ class admin_view(ModelView):
     can_export = False
 
 
-
-@app.route('/cong-ty/dang-nhap',methods=['GET','POST'])
-def dang_nhap():
-    form_dang_nhap = Form_dang_nhap()
-    if form_dang_nhap.validate_on_submit():
-        form_dang_nhap.validate_ten_dang_nhap(form_dang_nhap.ten_dang_nhap.data)
-        user = form_dang_nhap.get_user()
-        login_user(user)
-        return redirect(url_for('admin'))
-    return render_template('Quan_ly/MH_Dang_nhap.html', form_dang_nhap = form_dang_nhap)
-
-@app.route('/cong-ty/dang-xuat',methods =['GET','POST'])
-def dang_xuat():
-    session.clear()
-    login.logout_user()
-    return redirect(url_for('index'))
-
 @app.route('/cong-ty',methods=['GET','POST'])
 def admin():
     if not current_user.is_authenticated:
@@ -130,10 +113,20 @@ def ql_don_hang_theo_ngay():
 
     return render_template('Quan_ly/QL_don_hang/QL_don_hang_theo_ngay.html', form = form, hoa_don = hoa_don, tieu_de = tieu_de)
 
-@app.route('/QL-don-hang/hoa-don/#<int:ma_hd>')
+@app.route("/QL-don-hang/hoa-don/hd_<int:ma_hd>", methods = ['GET','POST'])
 def xem_hoa_don(ma_hd):
-
-    return render_template('Quan_ly/QL_don_hang/QL_don_hang_chi_tiet.html')
+    
+    hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hd).first()
+    don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == ma_hd).all()
+    khach_hang = dbSession.query(Khach_hang).filter(Khach_hang.ma_khach_hang == hoa_don.ma_khach_hang).first()
+    lst_temp = []
+    for item in don_hang:
+        san_pham = {}
+        san_pham['ma_sp'] = item.ma_san_pham
+        san_pham['ten_sp'] = dbSession.query(San_pham).filter(San_pham.ma_san_pham == item.ma_san_pham).first()
+        lst_temp.append(san_pham)
+    tong_tien = "{:,}".format(int(hoa_don.tong_tien))
+    return render_template('Quan_ly/QL_don_hang/QL_don_hang_chi_tiet.html', hoa_don = hoa_don, don_hang = don_hang, khach_hang = khach_hang, lst_temp =lst_temp, tong_tien = tong_tien)
 
 init_login()
 admin = Admin(app, name = "Admin", index_view=MyAdminIndexView(name="Admin"), template_mode='bootstrap3')

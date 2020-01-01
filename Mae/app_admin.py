@@ -55,3 +55,20 @@ def user_register():
         return redirect(url_for('index'))
     
     return render_template('Quan_ly/MH_Dang_ky.html',form = form)
+
+###-----app quản lý
+@app.route('/cong-ty/dang-nhap',methods=['GET','POST'])
+def dang_nhap():
+    form_dang_nhap = Form_dang_nhap()
+    if form_dang_nhap.validate_on_submit():
+        form_dang_nhap.validate_ten_dang_nhap(form_dang_nhap.ten_dang_nhap.data)
+        user = form_dang_nhap.get_user()
+        login_user(user)
+        return redirect(url_for('admin'))
+    return render_template('Quan_ly/MH_Dang_nhap.html', form_dang_nhap = form_dang_nhap)
+
+@app.route('/cong-ty/dang-xuat',methods =['GET','POST'])
+def dang_xuat():
+    session.clear()
+    login.logout_user()
+    return redirect(url_for('dang_nhap'))

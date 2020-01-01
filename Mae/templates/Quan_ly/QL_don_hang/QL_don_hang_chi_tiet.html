@@ -1,35 +1,62 @@
 {%extends 'layout/master_manage.html'%}
 {%block content%}
+    
 <div class="container" style="margin: 20px auto;">
     <div class="row">
         <div class="col-md-12 text-center">
-            <h3>{{tieu_de}}</h3>
+            <h3>Thông tin hóa đơn #{{hoa_don.ma_hoa_don}}</h3>
+        </div>
+    </div>
+    <div class="row text-left">
+        <div class="col-md-12">
+            Ngày tạo hóa đơn: <b>{{hoa_don.ngay_tao_hoa_don}}</b>
+        </div>
+        <div class="col-md-12">
+            Tên khách hàng: <b>{{khach_hang.ten_khach_hang}}</b>
+        </div>
+        <div class="col-md-12">
+            Địa chỉ giao hàng: <b>{{hoa_don.dia_chi_giao_hang}}</b>
+        </div>
+        <div class="col-md-12">
+            Số điện thoại liên lạc: <b>{{hoa_don.so_dien_thoai_nguoi_nhan}}</b>
+        </div>
+    </div>
+    <div class="row" style="margin: 40px auto;">
+        <div class="col-md-12 text-center">
+            <h3>Thông tin đơn hàng</h3>
         </div>
     </div>
     <div class="row">
-        <table class="table" style="margin: 40px auto;">
+        <table class="table">
             <thead class="thead-dark">
 
                 <tr>
                     <th scope="col">STT</th>
-                    <th scope="col">Mã hoá đơn</th>
-                    <th scope="col">Ngày</th>
-                    <th scope="col">Tổng tiền</th>
-                    <th scope="col">Địa chỉ giao hàng</th>
-                    <th scope="col"></th>
+                    <th scope="col">Mã sản phẩm</th>
+                    <th scope="col">Tên sản phẩm</th>
+                    <th scope="col">Số lượng</th>
+                    <th scope="col">Giá bán</th>
+                    <th scope="col">Thành tiền</th>
                 </tr>
             </thead>
             <tbody>
-                {%for item in hoa_don%}
+                {%for item in don_hang%}
                 <tr>
                     <th scope="row">{{loop.index}}</th>
-                    <td>{{item.ma_hoa_don}}</td>
-                    <td>{{item.ngay_tao_hoa_don}}</td>
-                    <td>{{item.tong_tien}}</td>
-                    <td>{{item.dia_chi_giao_hang}}</td>
-                    <td><small><a href = "/QL-don-hang/hoa-don/#{{item.ma_hoa_don}}"> Chi tiết hóa đơn</a></small></td>
+                    <td>{{item.ma_san_pham}}</td>
+                    {%for sp in lst_temp%}
+                    {%if sp['ma_sp'] == item.ma_san_pham%}
+                    <td>{{sp['ten_sp']}}</td>
+                    {%endif%}
+                    {%endfor%}
+                    <td>{{item.so_luong}}</td>
+                    <td>{{item.don_gia}}</td>
+                    <td>{{item.so_luong * item.don_gia}}</td>
                 </tr>
                 {%endfor%}
+                <tr>
+                    <td scope="col"><b>Tổng cộng: {{tong_tien}} VNĐ </b></td>
+                </tr>
             </tbody>
         </table>
     </div>
