@@ -10,31 +10,12 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
 
-                <a onclick="Th_hoa_don.value ='All';Xem_hoa_don.submit()" class="nav-item nav-link active">Xem
-                    tất cả<span class="sr-only">(current)</span></a>
-                
-                <div class="nav-item">
-                    <div class="form-group row">
-                        <div class="col">
-                            <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-info" type="submit">Xem</button>
-                        </div>
-                    </div>
-                                        
-                </div>
-                <div class="nav-item">
-                    <div class="form-group row">
-                        <div class="col">
-                            <input class="form-control" type="date" name = "DateInput" id="example-date-input">
-                        </div>
-                        <div class="col">
-                            <button class="btn btn-info" type="submit">Xem</button>
-                        </div>
-                    </div>
-                </div>
-                
+                <button onclick="Th_hoa_don.value ='All';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem
+                    tất cả</button>
+                <button onclick="Th_hoa_don.value ='TimKiem';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem theo mã hóa đơn</button>
+                <button onclick="Th_hoa_don.value ='TheoNgay';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem theo ngày</button>
+                <input name="Th_hoa_don" type="hidden">
+
 
 
             </div>
@@ -42,38 +23,12 @@
     </nav>
 </form>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <h3>{{tieu_de}}</h3>
-        </div>
-    </div>
-    <div class="row">
-        <table class="table" style="margin: 40px auto;">
-            <thead class="thead-dark">
-
-                <tr>
-                    <th scope="col">STT</th>
-                    <th scope="col">Mã hoá đơn</th>
-                    <th scope="col">Ngày</th>
-                    <th scope="col">Tổng tiền</th>
-                    <th scope="col">Địa chỉ giao hàng</th>
-                </tr>
-            </thead>
-            <tbody>
-                {%for item in hoa_don%}
-                <tr>
-                    <th scope="row">{{loop.index}}</th>
-                    <td>{{item.ma_hoa_don}}</td>
-                    <td>{{item.ngay_tao_hoa_don}}</td>
-                    <td>{{item.tong_tien}}</td>
-                    <td>{{item.dia_chi_giao_hang}}</td>
-                </tr>
-                {%endfor%}
-            </tbody>
-        </table>
-    </div>
+<div class="main" style="padding: 0 0; height: 100vh">
+    <iframe src="{{dia_chi}}" style="border:none" width="100%" height="100%" style="margin:0px 0px;"></iframe>
+    
 </div>
+
+
 
 
 {%endblock%}

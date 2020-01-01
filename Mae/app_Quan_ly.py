@@ -14,6 +14,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from sqlalchemy.orm import sessionmaker, configure_mappers
 from sqlalchemy import exc
+from flask_sqlalchemy import Pagination
 
 from Mae.xu_ly.Xu_ly_Model import *
 from Mae.xu_ly.Xu_ly_Form import *
@@ -79,22 +80,60 @@ def ql_don_hang():
     ngay_hom_nay = today.date()
     hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == ngay_hom_nay).all()
     tieu_de = 'Đơn hàng ngày hôm nay'
-    session['dieu_khien'] = ''
+    dia_chi = ''
     if request.form.get('Th_hoa_don'):
         dieu_khien = request.form.get('Th_hoa_don')
-        session['dieu_khien'] = dieu_khien
         if dieu_khien == 'All':
-            hoa_don = dbSession.query(Hoa_don).all()
-            tieu_de = 'Tất cả đơn hàng'
-        elif dieu_khien == 'Partly':
-            if request.method == 'POST':
-                ngay_tra_cuu = request.form.get('DateInput')
-                print(ngay_tra_cuu, type(ngay_tra_cuu))
-        elif dieu_khien == 'Search':
-            pass
-        
+            dia_chi = '/QL-don-hang/all'
+        elif dieu_khien == 'TimKiem':
+            dia_chi = '/QL-don-hang/ma-hoa-don'
+        elif dieu_khien == 'TheoNgay':
+            dia_chi ='/QL-don-hang/theo-ngay'
+          
 
-    return render_template('Quan_ly/MH_QL_don_hang.html', hoa_don = hoa_don, tieu_de = tieu_de)
+    return render_template('Quan_ly/MH_QL_don_hang.html', hoa_don = hoa_don, tieu_de = tieu_de, dia_chi = dia_chi)
+
+@app.route('/QL-don-hang/all', methods=['GET'])
+def ql_don_hang_all():
+    hoa_don = dbSession.query(Hoa_don).all()
+    tieu_de = 'Tất cả đơn hàng'
+    return render_template('Quan_ly/QL_don_hang/QL_don_hang_all.html', hoa_don = hoa_don, tieu_de = tieu_de)
+
+@app.route('/QL-don-hang/ma-hoa-don', methods=['GET','POST'])
+def ql_don_hang_ma_hd():
+    form = Form_QL_don_hang()
+    hoa_don = []
+    tieu_de = ''
+    if form.validate():
+        ma_hd = int(form.ma_hoa_don_tim_kiem.data)
+        hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hd).all()
+        if len(hoa_don)==0:
+            tieu_de = "Không tìm thấy mã hóa đơn"
+        else:
+            tieu_de = "Đơn hàng số " + str(ma_hd)
+
+    return render_template('Quan_ly/QL_don_hang/QL_don_hang_theo_ma_hd.html', form = form, hoa_don = hoa_don,  tieu_de = tieu_de)
+
+@app.route('/QL-don-hang/theo-ngay', methods=['GET','POST'])
+def ql_don_hang_theo_ngay():
+    form = Form_QL_don_hang()
+    hoa_don = []
+    tieu_de = ''
+    if request.method == 'POST':
+        ngay_tim_kiem = form.ngay_tim_kiem.data
+        hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == ngay_tim_kiem).all()
+        if len(hoa_don)==0:
+            tieu_de = "Không tìm thấy hóa đơn"
+
+        else:
+            tieu_de = "Đơn hàng của ngày " + str(ngay_tim_kiem.day) + " tháng " +str(ngay_tim_kiem.month)+ " năm " +str(ngay_tim_kiem.year)
+
+    return render_template('Quan_ly/QL_don_hang/QL_don_hang_theo_ngay.html', form = form, hoa_don = hoa_don, tieu_de = tieu_de)
+
+@app.route('/QL-don-hang/hoa-don/#<int:ma_hd>')
+def xem_hoa_don(ma_hd):
+
+    return render_template('Quan_ly/QL_don_hang/QL_don_hang_chi_tiet.html')
 
 init_login()
 admin = Admin(app, name = "Admin", index_view=MyAdminIndexView(name="Admin"), template_mode='bootstrap3')

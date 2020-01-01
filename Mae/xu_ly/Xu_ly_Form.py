@@ -79,7 +79,10 @@ class Form_hoa_don(FlaskForm):
         dbSession.add(hoa_don)
         dbSession.commit()
         return hoa_don.get_id()
-    
+
+class Form_QL_don_hang(FlaskForm):
+    ma_hoa_don_tim_kiem = fields.StringField()
+    ngay_tim_kiem = fields.DateField() 
     
 
 def init_login():
