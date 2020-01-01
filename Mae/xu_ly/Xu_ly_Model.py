@@ -34,7 +34,7 @@ class San_pham(Base):
     don_vi_tinh = Column(String(20), nullable = False, default = 'Cái')
     hinh_anh = Column(String(100), nullable = False)
     id_sendo = Column(Integer)
-    sku_sendo = Column(Integer)
+    sku_sendo = Column(String(100))
     thuoc_tinh = Column(String(200))
     mo_ta_tom_tat = Column(Text)
     mo_ta_chi_tiet = Column(Text)

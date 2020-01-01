@@ -29,13 +29,30 @@ class MyAdminIndexView(admin.AdminIndexView):
     def index(self):
         if not login.current_user.is_authenticated:
             return redirect(url_for('dang_nhap'))
-        return super(MyAdminIndexView, self).render('Quan_ly/manage_master.html')
+        return super(MyAdminIndexView, self).render('admin/index.html')
 
 class admin_view(ModelView):
     column_display_pk = True
     can_create = True
     can_delete = True
     can_export = False
+
+class san_pham_view(ModelView):
+    column_display_pk = True
+    can_create = True
+    can_delete = True
+    can_export = False
+    page_size = 10
+    column_list = ('ma_san_pham','ten_san_pham','ma_loai', 'gia_ban','gia_nhap', 'so_luong_ton', 'hinh_anh')
+    column_labels ={
+        'ma_san_pham':'Mã sản phẩm',
+        'ten_san_pham':'Tên sản phẩm',
+        'ma_loai':'Mã loại',
+        'gia_ban':'Giá bán',
+        'gia_nhap':'Giá nhập',
+        'so_luong_ton': 'Số lượng tồn'
+        ,'hinh_anh':'Hình ảnh'
+    }
 
 
 @app.route('/cong-ty',methods=['GET','POST'])
@@ -48,7 +65,7 @@ def admin():
         if man_hinh == "QL_Don_hang":
             dia_chi_frame = "/QL-don-hang"
         elif man_hinh == "QL_Kho":
-            dia_chi_frame = "QL-kho"
+            dia_chi_frame = "/QL-kho"
         elif man_hinh == "QL_Doanh_thu":
             dia_chi_frame = "/Ql-doanh-thu"
         elif man_hinh == "Admin":
@@ -72,8 +89,6 @@ def ql_don_hang():
             dia_chi = '/QL-don-hang/ma-hoa-don'
         elif dieu_khien == 'TheoNgay':
             dia_chi ='/QL-don-hang/theo-ngay'
-          
-
     return render_template('Quan_ly/MH_QL_don_hang.html', hoa_don = hoa_don, tieu_de = tieu_de, dia_chi = dia_chi)
 
 @app.route('/QL-don-hang/all', methods=['GET'])
@@ -128,9 +143,55 @@ def xem_hoa_don(ma_hd):
     tong_tien = "{:,}".format(int(hoa_don.tong_tien))
     return render_template('Quan_ly/QL_don_hang/QL_don_hang_chi_tiet.html', hoa_don = hoa_don, don_hang = don_hang, khach_hang = khach_hang, lst_temp =lst_temp, tong_tien = tong_tien)
 
+@app.route("/QL-kho", methods = ['GET','POST'])
+def ql_kho():
+    dia_chi = ''
+    if request.method == 'POST':
+        dieu_khien = request.form.get('Th_kho_hang')
+        if dieu_khien == 'Import':
+            dia_chi = '/QL-kho/nhap-hang'
+        elif dieu_khien == 'SoLuongTon':
+            dia_chi = '/QL-kho/ton-kho'
+       
+    return render_template('Quan_ly/QL_kho_hang/MH_QL_kho_hang.html', dia_chi = dia_chi)
+
+@app.route('/QL-kho/nhap-hang',methods=['GET','POST'])
+def ql_kho_nhap():
+    form = Form_tim_kiem()
+    san_pham= []
+    if request.method == 'POST':
+        tim_kiem = form.noi_dung.data
+        if tim_kiem.isdigit():
+            san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == tim_kiem).all()
+        else:
+            chuoi_truy_van = '%'+tim_kiem.upper()+'%'
+            san_pham = dbSession.query(San_pham).filter(San_pham.ten_san_pham.like(chuoi_truy_van)).all()
+
+    return render_template('Quan_ly/QL_kho_hang/Nhap_hang.html', form=form, san_pham = san_pham)
+
+@app.route('/QL-kho/ton-kho',methods = ['GET','POST'])
+def ql_kho_so_luong():
+    form = Form_tim_kiem()
+    san_pham= []
+    if request.method == 'POST':
+        tim_kiem = form.noi_dung.data
+        if tim_kiem.isdigit():
+            san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == tim_kiem).all()
+        else:
+            chuoi_truy_van = '%'+tim_kiem.upper()+'%'
+            san_pham = dbSession.query(San_pham).filter(San_pham.ten_san_pham.like(chuoi_truy_van)).all()
+    # san_pham = dbSession.query(San_pham).all()
+    # for item in san_pham:
+    #     item.so_luong_ton += 10
+    #     dbSession.add(item)
+    #     dbSession.commit()
+    return render_template('Quan_ly/QL_kho_hang/Ton_kho.html', form=form, san_pham = san_pham)
+
+
+
 init_login()
 admin = Admin(app, name = "Admin", index_view=MyAdminIndexView(name="Admin"), template_mode='bootstrap3')
 admin.add_view(admin_view(Loai_san_pham, dbSession, 'Loại sản phẩm'))
-admin.add_view(admin_view(San_pham, dbSession, 'Sản phẩm'))
-admin.add_view(admin_view(Loai_nguoi_dung, dbSession, 'Loại người dùng'))
-admin.add_view(admin_view(Nguoi_dung, dbSession, 'Người dùng'))
+admin.add_view(san_pham_view(San_pham, dbSession, 'Sản phẩm'))
+# admin.add_view(admin_view(Loai_nguoi_dung, dbSession, 'Loại người dùng'))
+# admin.add_view(admin_view(Nguoi_dung, dbSession, 'Người dùng'))

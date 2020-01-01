@@ -82,7 +82,10 @@ class Form_hoa_don(FlaskForm):
 
 class Form_QL_don_hang(FlaskForm):
     ma_hoa_don_tim_kiem = fields.StringField()
-    ngay_tim_kiem = fields.DateField() 
+    ngay_tim_kiem = fields.DateField()
+
+class Form_tim_kiem(FlaskForm):
+    noi_dung = fields.StringField()
     
 
 def init_login():
