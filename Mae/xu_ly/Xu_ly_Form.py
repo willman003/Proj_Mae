@@ -81,7 +81,7 @@ class Form_hoa_don(FlaskForm):
         return hoa_don.get_id()
 
 class Form_QL_don_hang(FlaskForm):
-    ma_hoa_don_tim_kiem = fields.StringField()
+    ma_hoa_don_tim_kiem = fields.IntegerField([validators.required()])
     ngay_tim_kiem = fields.DateField()
 
 class Form_tim_kiem(FlaskForm):

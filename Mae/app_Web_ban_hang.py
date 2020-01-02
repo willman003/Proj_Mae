@@ -158,6 +158,11 @@ def success():
     hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hoa_don).first()
     customer = dbSession.query(Khach_hang).filter(Khach_hang.ma_nguoi_dung == current_user.ma_nguoi_dung).first()
     don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == ma_hoa_don).all()
+    for item in don_hang:
+        san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == item.ma_san_pham).first()
+        san_pham.so_luong_ton -= item.so_luong
+        dbSession.add(san_pham)
+        dbSession.commit()
     gui_email(ma_hoa_don,hoa_don, customer, don_hang)
     
     return render_template('Web/Success.html')

@@ -36,7 +36,7 @@
                     <th scope="row">{{loop.index}}</th>
                     <td>{{item.ma_hoa_don}}</td>
                     <td>{{item.ngay_tao_hoa_don}}</td>
-                    <td>{{item.tong_tien}}</td>
+                    <td>{{"{:,}".format(item.tong_tien|int)}}</td>
                     <td>{{item.dia_chi_giao_hang}}</td>
                     <td><small><a href = "/QL-don-hang/hoa-don/hd_{{item.ma_hoa_don}}"> Chi tiết hóa đơn</a></small></td>
 

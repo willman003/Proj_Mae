@@ -103,7 +103,7 @@ def ql_don_hang_ma_hd():
     hoa_don = []
     tieu_de = ''
     if form.validate():
-        ma_hd = int(form.ma_hoa_don_tim_kiem.data)
+        ma_hd = form.ma_hoa_don_tim_kiem.data
         hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hd).all()
         if len(hoa_don)==0:
             tieu_de = "Không tìm thấy mã hóa đơn"
@@ -115,8 +115,10 @@ def ql_don_hang_ma_hd():
 @app.route('/QL-don-hang/theo-ngay', methods=['GET','POST'])
 def ql_don_hang_theo_ngay():
     form = Form_QL_don_hang()
-    hoa_don = []
-    tieu_de = ''
+    tieu_de = 'Đơn hàng ngày hôm nay'
+    today = datetime.now()
+    hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == today.date()).all()
+
     if request.method == 'POST':
         ngay_tim_kiem = form.ngay_tim_kiem.data
         hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == ngay_tim_kiem).all()
@@ -139,6 +141,7 @@ def xem_hoa_don(ma_hd):
         san_pham = {}
         san_pham['ma_sp'] = item.ma_san_pham
         san_pham['ten_sp'] = dbSession.query(San_pham).filter(San_pham.ma_san_pham == item.ma_san_pham).first()
+        san_pham['don_gia'] = int(item.don_gia.split(',')[0])*1000
         lst_temp.append(san_pham)
     tong_tien = "{:,}".format(int(hoa_don.tong_tien))
     return render_template('Quan_ly/QL_don_hang/QL_don_hang_chi_tiet.html', hoa_don = hoa_don, don_hang = don_hang, khach_hang = khach_hang, lst_temp =lst_temp, tong_tien = tong_tien)
@@ -205,5 +208,7 @@ init_login()
 admin = Admin(app, name = "Admin", index_view=MyAdminIndexView(name="Admin"), template_mode='bootstrap3')
 admin.add_view(admin_view(Loai_san_pham, dbSession, 'Loại sản phẩm'))
 admin.add_view(san_pham_view(San_pham, dbSession, 'Sản phẩm'))
+admin.add_view(san_pham_view(Dot_khuyen_mai, dbSession, 'Đợt khuyến mãi'))
+admin.add_view(san_pham_view(San_pham_khuyen_mai, dbSession, 'Sản phẩm khuyến mãi'))
 # admin.add_view(admin_view(Loai_nguoi_dung, dbSession, 'Loại người dùng'))
 # admin.add_view(admin_view(Nguoi_dung, dbSession, 'Người dùng'))

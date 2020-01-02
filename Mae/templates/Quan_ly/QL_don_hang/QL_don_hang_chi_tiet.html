@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="row">
-        <table class="table">
+        <table class="table text-center">
             <thead class="thead-dark">
 
                 <tr>
@@ -51,11 +51,16 @@
                     {%endfor%}
                     <td>{{item.so_luong}}</td>
                     <td>{{item.don_gia}}</td>
-                    <td>{{item.so_luong * item.don_gia}}</td>
+                    {%for sp in lst_temp%}
+                    {%if sp['ma_sp'] == item.ma_san_pham%}
+                    <td>{{"{:,}".format(item.so_luong * sp['don_gia'])}}</td>
+                    {%endif%}
+                    {%endfor%}
+                    
                 </tr>
                 {%endfor%}
                 <tr>
-                    <td scope="col"><b>Tổng cộng: {{tong_tien}} VNĐ </b></td>
+                    <td scope="col-md-12"><b>Tổng cộng: {{tong_tien}} VNĐ </b></td>
                 </tr>
             </tbody>
         </table>
