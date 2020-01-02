@@ -19,8 +19,9 @@ db_session = DBSession()
 def index():
     
     danh_sach_category = db_session.query(Loai_san_pham).all()
-    
-    return render_template('Web/index.html', danh_sach_category = danh_sach_category)
+    san_pham = db_session.query(San_pham).all()
+    print(len(san_pham))
+    return render_template('Web/index.html', san_pham = san_pham, danh_sach_category = danh_sach_category)
 
 @app.route('/cau-chuyen-cua-mae')
 def story():
