@@ -187,6 +187,18 @@ def ql_kho_so_luong():
     #     dbSession.commit()
     return render_template('Quan_ly/QL_kho_hang/Ton_kho.html', form=form, san_pham = san_pham)
 
+@app.route('/QL-kho/nhap/sp_<int:ma_sp>', methods= ['GET','POST'])
+def nhap_san_pham(ma_sp):
+    form = Form_nhap_hang()
+    san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == ma_sp).first()
+    chuoi_thong_bao = ''
+    if request.method == 'POST':
+        so_luong_nhap = form.so_luong_nhap.data
+        san_pham.so_luong_ton += so_luong_nhap
+        dbSession.add(san_pham)
+        dbSession.commit()
+        chuoi_thong_bao = "Đã thêm " + str(so_luong_nhap) + " "+ san_pham.ten_san_pham + " vào kho hàng"
+    return render_template('Quan_ly/QL_kho_hang/Chi_tiet_nhap_hang.html', chuoi_thong_bao = chuoi_thong_bao, form = form, san_pham = san_pham)
 
 
 init_login()

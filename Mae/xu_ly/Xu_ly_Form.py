@@ -87,6 +87,8 @@ class Form_QL_don_hang(FlaskForm):
 class Form_tim_kiem(FlaskForm):
     noi_dung = fields.StringField()
     
+class Form_nhap_hang(FlaskForm):
+    so_luong_nhap = fields.IntegerField()
 
 def init_login():
 	login_manager = login.LoginManager()
