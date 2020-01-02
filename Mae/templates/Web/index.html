@@ -15,14 +15,14 @@
     <div id="carouselExampleControls" style="margin:auto 0;" class="carousel slide" data-ride="carousel">
         <div class="carousel-inner" style="width: 100%; height: 60vh;">
             <div class="carousel-item active">
-                <img src="../../static/images/sale-banner_1.jpg" class="d-block w-100" alt="banner1">
+                <img src="../../static/images/1655.jpg" class="d-block w-100" alt="banner1">
             </div>
             <div class="carousel-item">
                 <img src="../../static/images/sale-banner_4.jpg" class="d-block w-100" alt="banner2">
             </div>
             <div class="carousel-item">
-                <img src="../../static/images/sale-banner_3.jpg" class="d-block w-100" alt="banner3">
-            </div>
+                <img src="../../static/images/sale_banner-1.jpg" class="d-block w-100" alt="banner3">
+            </div> 
         </div>
         <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -35,19 +35,19 @@
     </div>
 
 </div>
-<div class="container-fluid" style="padding: 20px 0 ;background-image: url('{{url_for('static',filename='images/background_2.jpg')}}'); background-size: cover;">
-    <div class="container" style="color:black;">
+<div class="container-fluid" style="padding: 60px 0 ;background-image: url({{url_for('static',filename='images/background_2.jpg')}}); background-size: cover;">
+    <div class="container" style="margin-bottom: 20px;color:black;">
         <div class="row">
             <div class="col-md-12 text-center">
                 <h2>Bán chạy trong tháng</h2>
             </div>
         </div>
     </div>
-    <!--Carousel Wrapper-->
-    <div id="multi-item-example" style="margin-top: 20px;" class="container carousel slide carousel-multi-item"
+    
+    <div id="multi-item-example" style="margin-top: 60px;" class="container carousel slide carousel-multi-item"
         data-ride="carousel">
 
-        <!--Controls-->
+        
         <a class="carousel-control-prev" href="#multi-item-example" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
@@ -56,26 +56,18 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
-        <!-- <div class="controls-top">
-            <a class="btn-floating" href="#multi-item-example" data-slide="prev"><i class="fas fa-chevron-left"></i></a>
-            <a class="btn-floating" href="#multi-item-example" data-slide="next"><i class="fas fa-chevron-right"></i></a>
-        </div> -->
-        <!--/.Controls-->
-
-
-        <!--Slides-->
+        
         <div class="carousel-inner" role="listbox">
-
-            <!--First slide-->
+            
             <div class="carousel-item active" data-interval="5000">
                 <div class="row">
                     {%for item in san_pham%}
                     {%if item.ma_san_pham <=4 %}
                     <div class="col-sm-3">
-                        <div class="card h-100" style="border-radius: 10px;">
+                        <div class="card border-dark h-100" style="border-radius: 5px;">
                             <img height="300px" class="card-img-top" src="{{item.hinh_anh}}" alt="Card image cap">
                             <div class="card-body">
-                                <h4 class="card-title">{{item.ten_san_pham}}</h4>
+                                <h4 class="card-title">{{item.ten_san_pham|title}}</h4>
                                 <p class="card-text">{{item.gia_ban}}</p>
 
                             </div>
@@ -90,18 +82,16 @@
 
 
             </div>
-            <!--/.First slide-->
-
-            <!--Second slide-->
+            
             <div class="carousel-item" data-interval="5000">
                 <div class="row">
                     {%for item in san_pham%}
                     {%if item.ma_san_pham >4 and item.ma_san_pham<=8 %}
                     <div class="col-sm-3">
-                        <div class="card h-100" style="border-radius: 10px;">
+                        <div class="card border-dark h-100" style="border-radius: 5px;">
                             <img height="300px" class="card-img-top" src="{{item.hinh_anh}}" alt="Card image cap">
                             <div class="card-body">
-                                <h4 class="card-title">{{item.ten_san_pham}}</h4>
+                                <h4 class="card-title">{{item.ten_san_pham|title}}</h4>
                                 <p class="card-text">{{item.gia_ban}}</p>
 
                             </div>
@@ -117,107 +107,90 @@
 
 
             </div>
-            <!--/.Second slide-->
-
-
-
+           
         </div>
-        <!--/.Slides-->
-
+        
     </div>
-    <!--/.Carousel Wrapper-->
+    
 
 </div>
 
-
-<div class="container" style="margin-top: 20px;">
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <h2>Sản phẩm khuyến mãi</h2>
+<div class="container-fluid" style="padding: 60px 0 ;background-image: url({{url_for('static',filename='images/background_3.jpg')}}); background-size: cover;">
+    <div class="container" style="margin-bottom: 20px;">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h2>Sản phẩm khuyến mãi</h2>
+            </div>
         </div>
     </div>
-</div>
-<div id="multi-item-example-2" style="margin-top: 20px;" class="container carousel slide carousel-multi-item"
-    data-ride="carousel">
-
-    <!--Controls-->
-    <a class="carousel-control-prev" href="#multi-item-example-2" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#multi-item-example-2" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-    <!-- <div class="controls-top">
-        <a class="btn-floating" href="#multi-item-example" data-slide="prev"><i class="fas fa-chevron-left"></i></a>
-        <a class="btn-floating" href="#multi-item-example" data-slide="next"><i class="fas fa-chevron-right"></i></a>
-    </div> -->
-    <!--/.Controls-->
-
-
-    <!--Slides-->
-    <div class="carousel-inner" role="listbox">
-
-        <!--First slide-->
-        <div class="carousel-item active" data-interval="5000">
-            <div class="row">
-                {%for item in san_pham%}
-                {%if item.ma_san_pham <=4 %}
-                <div class="col-sm-3">
-                    <div class="card h-100" style="border-radius: 10px;">
-                        <img height="300px" class="card-img-top" src="{{item.hinh_anh}}" alt="Card image cap">
-                        <div class="card-body">
-                            <h4 class="card-title">{{item.ten_san_pham}}</h4>
-                            <p class="card-text">{{item.gia_ban}}</p>
-
-                        </div>
-                        <div class="card-footer text-center">
-                            <a href="chi-tiet/sp_{{item.ma_san_pham}}">Xem chi tiết</a>
+    <div id="multi-item-example-2" style="margin-top: 60px;" class="container carousel slide carousel-multi-item"
+        data-ride="carousel">
+            
+        <a class="carousel-control-prev" href="#multi-item-example-2" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#multi-item-example-2" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+        
+        <div class="carousel-inner" role="listbox">
+                
+            <div class="carousel-item active" data-interval="5000">
+                <div class="row">
+                    {%for item in san_pham%}
+                    {%if item.ma_san_pham <=4 %}
+                    <div class="col-sm-3">
+                        <div class="card border-dark h-100" style="border-radius: 5px;">
+                            <img height="300px" class="card-img-top" src="{{item.hinh_anh}}" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">{{item.ten_san_pham}}</h4>
+                                <p class="card-text">{{item.gia_ban}}</p>
+    
+                            </div>
+                            <div class="card-footer text-center">
+                                <a href="chi-tiet/sp_{{item.ma_san_pham}}">Xem chi tiết</a>
+                            </div>
                         </div>
                     </div>
+                    {%endif%}
+                    {%endfor%}
                 </div>
-                {%endif%}
-                {%endfor%}
+    
+    
             </div>
-
-
-        </div>
-        <!--/.First slide-->
-
-        <!--Second slide-->
-        <div class="carousel-item" data-interval="5000">
-            <div class="row">
-                {%for item in san_pham%}
-                {%if item.ma_san_pham >4 and item.ma_san_pham<=8 %}
-                <div class="col-sm-3">
-                    <div class="card h-100" style="border-radius: 10px;">
-                        <img height="300px" class="card-img-top" src="{{item.hinh_anh}}" alt="Card image cap">
-                        <div class="card-body">
-                            <h4 class="card-title">{{item.ten_san_pham}}</h4>
-                            <p class="card-text">{{item.gia_ban}}</p>
-
-                        </div>
-                        <div class="card-footer text-center">
-                            <a href="chi-tiet/sp_{{item.ma_san_pham}}">Xem chi tiết</a>
+                        
+            <div class="carousel-item" data-interval="5000">
+                <div class="row">
+                    {%for item in san_pham%}
+                    {%if item.ma_san_pham >4 and item.ma_san_pham<=8 %}
+                    <div class="col-sm-3">
+                        <div class="card border-dark h-100" style="border-radius: 5px;">
+                            <img height="300px" class="card-img-top" src="{{item.hinh_anh}}" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">{{item.ten_san_pham}}</h4>
+                                <p class="card-text">{{item.gia_ban}}</p>
+    
+                            </div>
+                            <div class="card-footer text-center">
+                                <a href="chi-tiet/sp_{{item.ma_san_pham}}">Xem chi tiết</a>
+                            </div>
                         </div>
                     </div>
+                    {%endif%}
+                    {%endfor%}
+    
                 </div>
-                {%endif%}
-                {%endfor%}
-
+       
             </div>
-
-
+               
         </div>
-        <!--/.Second slide-->
-
-
-
+           
     </div>
-    <!--/.Slides-->
+    
 
 </div>
-<!--/.Carousel Wrapper-->
+
 
 {% endblock %}
