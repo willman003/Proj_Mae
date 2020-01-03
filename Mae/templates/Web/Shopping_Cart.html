@@ -1,4 +1,4 @@
-{%extends 'layout/master.html'%}
+{%extends 'layout/master_1.html'%}
 {%block title%} Xem giỏ hàng {%endblock%}
 {%block content%}
 <div class="container-fluid" style="margin: 50px auto; padding: 20px 20px;border-radius: 10px;">
@@ -38,12 +38,14 @@
                                     action="{{url_for('cap_nhat_gio_hang', ma_sp = item['ma_sp'])}}">
                                     {{form.hidden_tag()}}
                                     {{form.so_luong(class="form-control text-center", value=item['so_luong'], style="width: 60px;")}}
-                                    <button title="Cập nhật số lượng" class="btn"
-                                        href="xem-gio-hang/cap-nhat/sp_{{item['ma_sp']}}" type="submit"><i
-                                            class="fas fa-sync-alt"
-                                            style="margin: auto 30px; background-color: white;"></i>Cập nhật</button>
-                                    <a title="Xóa" href="xem-gio-hang/xoa/sp_{{item['ma_sp']}}"><i
-                                            class="far fa-trash-alt"></i>Xóa</a>
+                                    <a title="Cập nhật số lượng" class="btn"
+                                        href="xem-gio-hang/cap-nhat/sp_{{item['ma_sp']}}" type="submit" style="margin: auto 30px; background-color: white;"><i
+                                            class="fas fa-sync-alt" style = "margin-right: 10px;"></i>Cập nhật
+                                    </a>
+                                    <a title="Xóa" href="xem-gio-hang/xoa/sp_{{item['ma_sp']}}">
+                                        <i class="far fa-trash-alt" style = "margin-right: 10px;"></i>
+                                        Xóa
+                                    </a>
                                 </form>
 
                             </td>

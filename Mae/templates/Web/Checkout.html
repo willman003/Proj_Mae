@@ -1,14 +1,17 @@
-{%extends 'layout/master.html'%}
+{%extends 'layout/master_1.html'%}
 {%block title%} Xem giỏ hàng {%endblock%}
 {%block content%}
-<div class="container-fluid" style="background-color: white;padding: auto 40px; padding-bottom: 20px; margin: 20px auto;">
-    <div class="row" style="background-color: whitesmoke;">
-        <div class="col-md-12">
-            Breadcrumb
-        </div>
-    </div>
-    <div class="row" >
-        <div class="col-md-12 text-center">
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/xem-gio-hang">Thông tin đơn hàng</a></li>
+        
+        <li class="breadcrumb-item active" aria-current="page">Thông tin thanh toán</li>
+    </ol>
+</nav>
+<div class="container-fluid" style="background-color: white;padding: 20px 40px; padding-bottom: 20px; margin: 20px auto;">
+    
+    <div class="row">
+        <div class="col-md-12 text-center" >
             <h2>Thanh toán</h2>
             <hr>
         </div>
@@ -20,7 +23,8 @@
                 {{form.hidden_tag()}}
                 <div class="form-group">
                     
-                    <label for="ho_ten">Họ tên người nhận:</label>
+                    <label for="ho_ten">Họ tên:</label>
+                    
                     {{form.ho_ten(class='form-control', value=customer.ten_khach_hang)}}
                        
                 </div>
@@ -39,13 +43,30 @@
         </div>
         <div class="col-md-4">
             <h4 class="text-center">Đơn hàng</h4>
+            <hr>
             {%for item in session['Gio_hang']%}
-            <div class="row">
-                <div class="col text-right">
+            <div class="row text-center">
+                <div class="col">
+                    <b>STT</b>
+                </div>
+                <div class="col">
+                    <b>Tên sản phẩm</b>
+                </div>
+                <div class="col">
+                    <b>Giá bán</b>
+                </div>
+                <div class="col">
+                    <b>Số lượng</b>
+                </div>
+
+            </div>
+            <hr>
+            <div class="row text-center">
+                <div class="col">
                     {{loop.index}}
                 </div>
                 <div class="col">
-                    {{item['ten_sp']}}
+                    {{item['ten_sp']|title}}
                 </div>
                 <div class="col">
                     {{item['gia_ban']}}
@@ -58,8 +79,8 @@
             {%endfor%}
             <hr>
             <div class="row">
-                <div class="col-md-12 text-center">
-                    Tổng cộng: {{session['Tong_tien']}} VND
+                <div class="col-md-12 text-right">
+                    <b>Tổng cộng: {{"{:,}".format(tong_tien)}} VND </b>
                 </div>
             </div>
 

@@ -3,6 +3,12 @@
 {% block title %} {{loai.ten_loai}} {% endblock %}
 
 {% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{loai.ten_loai}}</li>
+    </ol>
+</nav>
 <div class="container-fluid" style="background-color: whitesmoke;">
     <div class="row">
         <div class="col-md-12">

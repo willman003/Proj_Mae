@@ -20,7 +20,7 @@ def index():
     
     danh_sach_category = db_session.query(Loai_san_pham).all()
     san_pham = db_session.query(San_pham).all()
-    print(len(san_pham))
+    
     return render_template('Web/index.html', san_pham = san_pham, danh_sach_category = danh_sach_category)
 
 @app.route('/cau-chuyen-cua-mae')
@@ -36,6 +36,7 @@ def san_pham(id):
     danh_sach_category = db_session.query(Loai_san_pham).all()
     loai = db_session.query(Loai_san_pham).filter(Loai_san_pham.ma_loai == id).one()
     danh_sach_san_pham = db_session.query(San_pham).filter(San_pham.ma_loai == id).all()
+    session['id_category'] = id
    
     return render_template('Web/Loai_san_pham.html', loai = loai, danh_sach_san_pham = danh_sach_san_pham, id = id, danh_sach_category = danh_sach_category)
 
@@ -126,7 +127,7 @@ def dat_hang():
     if not current_user.is_authenticated:
         return redirect(url_for('log_in'))
     customer = dbSession.query(Khach_hang).filter(Khach_hang.ma_nguoi_dung == current_user.ma_nguoi_dung).first()
-    
+    danh_sach_category = db_session.query(Loai_san_pham).all()
     form = Form_hoa_don()
     tong_tien = 0
     for item in session['Gio_hang']:
@@ -149,7 +150,7 @@ def dat_hang():
         return redirect(url_for('success'))
         
     
-    return render_template('Web/Checkout.html', form = form, customer = customer, tong_tien = tong_tien)
+    return render_template('Web/Checkout.html', form = form, customer = customer, tong_tien = tong_tien, danh_sach_category = danh_sach_category)
 
 @app.route('/success',methods=['GET'])
 def success():
@@ -159,6 +160,7 @@ def success():
     hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hoa_don).first()
     customer = dbSession.query(Khach_hang).filter(Khach_hang.ma_nguoi_dung == current_user.ma_nguoi_dung).first()
     don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == ma_hoa_don).all()
+    danh_sach_category = db_session.query(Loai_san_pham).all()
     for item in don_hang:
         san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == item.ma_san_pham).first()
         san_pham.so_luong_ton -= item.so_luong
@@ -166,7 +168,7 @@ def success():
         dbSession.commit()
     gui_email(ma_hoa_don,hoa_don, customer, don_hang)
     
-    return render_template('Web/Success.html')
+    return render_template('Web/Success.html', danh_sach_category = danh_sach_category)
 
 @app.route('/tiep-tuc', methods =['GET'])
 def tiep_tuc():

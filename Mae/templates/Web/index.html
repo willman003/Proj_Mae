@@ -35,7 +35,7 @@
     </div>
 
 </div>
-<div class="container-fluid" style="padding: 60px 0 ;background-image: url({{url_for('static',filename='images/background_2.jpg')}}); background-size: cover;">
+<div class="container-fluid" style="padding: 40px 0 ;background-image: url({{url_for('static',filename='images/background_2.jpg')}}); background-size: cover;">
     <div class="container" style="margin-bottom: 20px;color:black;">
         <div class="row">
             <div class="col-md-12 text-center">
@@ -115,8 +115,8 @@
 
 </div>
 
-<div class="container-fluid" style="padding: 60px 0 ;background-image: url({{url_for('static',filename='images/background_3.jpg')}}); background-size: cover;">
-    <div class="container" style="margin-bottom: 20px;">
+<div class="container-fluid" style="padding: 40px 0 ;background-image: url({{url_for('static',filename='images/background_3.jpg')}}); background-size: cover;">
+    <div class="container" style="">
         <div class="row">
             <div class="col-md-12 text-center">
                 <h2>Sản phẩm khuyến mãi</h2>
@@ -145,7 +145,7 @@
                         <div class="card border-dark h-100" style="border-radius: 5px;">
                             <img height="300px" class="card-img-top" src="{{item.hinh_anh}}" alt="Card image cap">
                             <div class="card-body">
-                                <h4 class="card-title">{{item.ten_san_pham}}</h4>
+                                <h4 class="card-title">{{item.ten_san_pham|title}}</h4>
                                 <p class="card-text">{{item.gia_ban}}</p>
     
                             </div>
@@ -169,7 +169,7 @@
                         <div class="card border-dark h-100" style="border-radius: 5px;">
                             <img height="300px" class="card-img-top" src="{{item.hinh_anh}}" alt="Card image cap">
                             <div class="card-body">
-                                <h4 class="card-title">{{item.ten_san_pham}}</h4>
+                                <h4 class="card-title">{{item.ten_san_pham|title}}</h4>
                                 <p class="card-text">{{item.gia_ban}}</p>
     
                             </div>

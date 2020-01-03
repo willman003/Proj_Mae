@@ -9,7 +9,20 @@
     }, 1000); // <-- time in milliseconds
 
 </script>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item">
+            <a href="/loai_{{session['id_category']}}">
+                {%for category in danh_sach_category%}
+                {%if san_pham.ma_loai == category.ma_loai%} {{ category.ten_loai }} {%endif%}
+                {% endfor %}
+            </a>
 
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">{{san_pham.ten_san_pham|title}}</li>
+    </ol>
+</nav>
 {%for message in get_flashed_messages()%}
 <div class="alert alert-success" id="noti" role="alert">
     {{message}}
