@@ -4,11 +4,14 @@
 
 {% block content %}
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-      <li class="breadcrumb-item active" aria-current="page">{{loai.ten_loai}}</li>
+    <ol class="breadcrumb" style="background-color:  white;">
+        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{loai.ten_loai}}</li>
     </ol>
 </nav>
+
+
+
 <div class="container-fluid" style="background-color: whitesmoke;">
     <div class="row">
         <div class="col-md-12">
@@ -21,7 +24,7 @@
         {%for san_pham in danh_sach_san_pham%}
         <div class="col-md-4" style="border: 1px solid whitesmoke;">
             <div class="card-group">
-                <div class="card w-50" style="width: 18rem;  border: none; margin-top: 10px;">
+                <div class="card border-dark w-50 mb-2" style="width: 18rem;  margin-top: 10px;">
                     <a href="/chi-tiet/sp_{{san_pham.ma_san_pham}}">
                         <img height="250px" width="250px" src="{{san_pham.hinh_anh}}" class="card-img-top"
                             alt="hinh_{{san_pham.ten_san_pham}}">
@@ -31,13 +34,12 @@
                             <h5 class="card-title">{{san_pham.ten_san_pham.capitalize()}}</h5>
                         </a>
                         <hr style="width: 100%;">
-                        <p class="card-text d-inline">Giá: {{san_pham.gia_ban/1000}}00 VND</p>
-
+                        <p class="card-text d-inline">Giá: {{'{:,}'.format(san_pham.gia_ban)}} VND</p>
                         <a class="btn btn-primary stretched-link"
-                            style="position: absolute; right: 0; background-color: #C7ADF5; color:white; border-radius: 50%;"><i
+                            style="position: absolute; right: 20px; background-color: #C7ADF5; color:white; border-radius: 50%;"><i
                                 class="fas fa-plus" style="border:none;"></i></a>
-
                     </div>
+
                 </div>
             </div>
 

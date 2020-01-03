@@ -36,6 +36,7 @@ def san_pham(id):
     danh_sach_category = db_session.query(Loai_san_pham).all()
     loai = db_session.query(Loai_san_pham).filter(Loai_san_pham.ma_loai == id).one()
     danh_sach_san_pham = db_session.query(San_pham).filter(San_pham.ma_loai == id).all()
+    
     session['id_category'] = id
    
     return render_template('Web/Loai_san_pham.html', loai = loai, danh_sach_san_pham = danh_sach_san_pham, id = id, danh_sach_category = danh_sach_category)

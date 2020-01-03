@@ -3,12 +3,15 @@
 {% block title %} Trang chủ {% endblock %}
 
 {% block content %}
+
 <script>
     setTimeout(function () {
         $('#noti').delay(1000).hide(0)
     }, 1000); // <-- time in milliseconds
 
+
 </script>
+
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
@@ -35,12 +38,12 @@
             <img height="300px" src="{{san_pham.hinh_anh}}" class="card-img-top" alt="hinh_{{san_pham.ten_san_pham}}">
         </div>
         <div class="col-md-8">
-            <h3 style="color: #8850EA">{{san_pham.ten_san_pham}}</h3>
+            <h3 style="color: #8850EA">{{san_pham.ten_san_pham|title}}</h3>
             <p>{{thong_bao}}</p>
             <p>{{chi_tiet['xuat_xu']}}</p>
             <p>{{chi_tiet['dung_tich']}}</p>
             <p>{{chi_tiet['cong_dung']}}</p>
-            <h4 style="color: #8850EA;">{{san_pham.gia_ban/1000}}00 VND</h4>
+            <h4 style="color: black;"><b> {{"{:,}".format(san_pham.gia_ban)}} VND </b></h4>
             <p>
                 <form method="POST">
                     <div class="row">
@@ -68,14 +71,71 @@
         <div class="col-md-12">
             <hr>
         </div>
-        <div class="col-md-12 text-center">
-            <h3>MÔ TẢ CHI TIẾT</h3>
-        </div>
-        <div class="col-md-12 mo-ta">
-            {{mo_ta_dai}}
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#home">Thông tin chi tiết</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#menu1">Đánh giá, nhận xét</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#menu2">Viết đánh giá sản phẩm</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane container active" id="home">
+                <div class="col-md-12">
+                    <p></p>
+                </div>
+                <div class="col-md-12 text-center">
+                    <h3>MÔ TẢ CHI TIẾT</h3>
+                </div>
+                <div class="col-md-12 mo-ta">
+                    
+                    {%if san_pham.ten_san_pham == 'SỮA RỬA MẶT TẨY TẾ BÀO CHẾT ST.IVES - TRÀ XANH'%}
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi maxime molestias a dolorem excepturi autem voluptatem? Recusandae quam officiis culpa voluptatibus aspernatur perspiciatis, praesentium saepe eligendi non ad. Aut, tempora.
+                    {%else%}
+                    {{mo_ta_dai}}
+                    {%endif%}
+                    
+                </div>
+
+            </div>
+            
+            <div class="tab-pane container fade" id="menu1">
+                <div class="col-md-12">
+                    <p></p>
+                </div>
+                <div class="col-md-12 text-center">
+                    <h3>Đánh giá nhận xét</h3>
+                </div>
+                <div class="col-md-12">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nam, vero sapiente dicta dolorum doloribus
+                    exercitationem fugit accusamus quo reiciendis eius, doloremque eveniet. Consectetur rem dolores
+                    delectus vel quam numquam cumque?
+                </div>
+
+            </div>
+            <div class="tab-pane container fade" id="menu2">
+                <div class="col-md-12">
+                    <p></p>
+                </div>
+                <div class="col-md-12 text-center">
+                    <h3>Viết đánh giá</h3>
+                </div>
+                <div class="col-md-12 mo-ta">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Debitis quidem, praesentium necessitatibus
+                    dicta incidunt ea excepturi tenetur accusantium porro minima odio neque soluta qui sed! Aperiam
+                    voluptas nesciunt inventore quas?
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 
 {%endblock%}
+

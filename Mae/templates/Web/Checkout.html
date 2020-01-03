@@ -8,7 +8,7 @@
         <li class="breadcrumb-item active" aria-current="page">Thông tin thanh toán</li>
     </ol>
 </nav>
-<div class="container-fluid" style="background-color: white;padding: 20px 40px; padding-bottom: 20px; margin: 20px auto;">
+<div class="container-fluid" style="padding: 20px 40px; padding-bottom: 20px; margin: 20px auto;">
     
     <div class="row">
         <div class="col-md-12 text-center" >
@@ -25,7 +25,7 @@
                     
                     <label for="ho_ten">Họ tên:</label>
                     
-                    {{form.ho_ten(class='form-control', value=customer.ten_khach_hang)}}
+                    {{form.ho_ten(class='form-control', value=customer.ten_khach_hang, readonly=True)}}
                        
                 </div>
                 <div class="form-group">
@@ -41,7 +41,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4" style="background-color: whitesmoke;">
             <h4 class="text-center">Đơn hàng</h4>
             <hr>
             {%for item in session['Gio_hang']%}
