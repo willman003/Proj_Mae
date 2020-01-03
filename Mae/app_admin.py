@@ -38,7 +38,7 @@ def user_register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     form = Form_dang_ky()
-    print(form.validate_on_submit())
+    
     if form.validate_on_submit():
         form.validate_ten_dang_nhap(form.ten_dang_nhap.data)
         user = Nguoi_dung()
