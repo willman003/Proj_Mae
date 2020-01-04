@@ -11,6 +11,7 @@ from flask_login import current_user, login_user
 
 from flask_ckeditor import CKEditor
 
+
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 db_session = DBSession()
