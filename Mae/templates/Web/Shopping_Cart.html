@@ -29,7 +29,7 @@
 
                         <tr>
                             <th scope="row">{{loop.index}}</th>
-                            <td>{{item['ten_sp']}} <p><a href="/chi-tiet/sp_{{item['ma_sp']}}"><small>Xem chi
+                            <td>{{item['ten_sp']|title}} <p><a href="/chi-tiet/sp_{{item['ma_sp']}}"><small>Xem chi
                                             tiết</small></a></p>
                             </td>
                             <td>{{item['gia_ban']}}</td>
@@ -39,11 +39,11 @@
                                     {{form.hidden_tag()}}
                                     {{form.so_luong(class="form-control text-center", value=item['so_luong'], style="width: 60px;")}}
                                     <a title="Cập nhật số lượng" class="btn"
-                                        href="xem-gio-hang/cap-nhat/sp_{{item['ma_sp']}}" type="submit" style="margin: auto 30px; background-color: white;"><i
-                                            class="fas fa-sync-alt" style = "margin-right: 10px;"></i>Cập nhật
+                                        href="xem-gio-hang/cap-nhat/sp_{{item['ma_sp']}}" type="submit" style="margin: auto 10px; background-color: white;"><i
+                                            class="fas fa-sync-alt" style = "margin-right: 5px;"></i>Cập nhật
                                     </a>
                                     <a title="Xóa" href="xem-gio-hang/xoa/sp_{{item['ma_sp']}}">
-                                        <i class="far fa-trash-alt" style = "margin-right: 10px;"></i>
+                                        <i class="far fa-trash-alt" style = "margin-right: 5px;"></i>
                                         Xóa
                                     </a>
                                 </form>

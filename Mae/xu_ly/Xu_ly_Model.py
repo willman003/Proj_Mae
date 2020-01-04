@@ -139,6 +139,19 @@ class Bai_viet(Base):
     def __str__(self):
         return self.tieu_de
 
+class Y_kien(Base):
+    __tablename__ = 'y_kien_kh'
+    id_bai_viet = Column(Integer, nullable = False, primary_key = True)
+    ma_khach_hang = Column(Integer, ForeignKey('khach_hang.ma_khach_hang'))
+    ma_san_pham = Column(Integer, ForeignKey('san_pham.ma_san_pham'))
+    tieu_de = Column(String(200))
+    noi_dung = Column(Text)
+    diem_danh_gia = Column(Integer)
+    ngay_tao = Column(DateTime, nullable=False)
+    ma_khach_hang_bai_viet = relationship(Khach_hang, backref='y_kien_kh')
+    ma_san_pham_bai_viet = relationship(San_pham, backref = 'y_kien_kh')
+    def __str__(self):
+        return self.id_bai_viet
 
 # class User(db.Model):
 #     	__tablename__='user'

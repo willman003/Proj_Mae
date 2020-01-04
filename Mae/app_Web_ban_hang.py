@@ -6,22 +6,29 @@ from Mae.xu_ly.Xu_ly_Form import *
 
 from flask import Flask, render_template, Markup, session, redirect, url_for, request, flash
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import desc
 from flask_login import current_user, login_user
 
+from flask_ckeditor import CKEditor
 
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 db_session = DBSession()
 
-
+ckeditor = CKEditor(app)
 
 @app.route('/',methods=['GET','POST'])
 def index():
     
     danh_sach_category = db_session.query(Loai_san_pham).all()
     san_pham = db_session.query(San_pham).all()
-    
-    return render_template('Web/index.html', san_pham = san_pham, danh_sach_category = danh_sach_category)
+    lst_temp = []
+    for item in san_pham:
+        dict_temp = {}
+        dict_temp['ma_sp'] = item.ma_san_pham
+        dict_temp['gia_ban'] = item.gia_ban
+        lst_temp.append(dict_temp)
+    return render_template('Web/index.html', lst_temp = lst_temp,san_pham = san_pham, danh_sach_category = danh_sach_category)
 
 @app.route('/cau-chuyen-cua-mae')
 def story():
@@ -48,22 +55,34 @@ def chi_tiet_san_pham(ma_sp):
     else:
         gio_hang = session['Gio_hang']
     form_mua_hang = Form_mua_hang()
-
+    form_y_kien = Form_y_kien()
     danh_sach_category = db_session.query(Loai_san_pham).all()
     san_pham = db_session.query(San_pham).filter(San_pham.ma_san_pham == ma_sp).one()
     mo_ta_dai = Markup(san_pham.mo_ta_chi_tiet.split('——————————')[0])
     
+    list_y_kien = db_session.query(Y_kien).filter(Y_kien.ma_san_pham == ma_sp).order_by(desc(Y_kien.ngay_tao)).all()
+    danh_sach_y_kien = []
+    for y_kien in list_y_kien:
+        dict_temp={}
+        kh = db_session.query(Khach_hang).filter(Khach_hang.ma_nguoi_dung == y_kien.ma_khach_hang).first()
+        dict_temp['khach_hang'] = kh.ten_khach_hang
+        date_temp = y_kien.ngay_tao.date().strftime('%d-%m-%Y')
+        time_temp = y_kien.ngay_tao.time().strftime('%X')
+        dict_temp['ngay_tao'] = date_temp + " " + time_temp
+        dict_temp['diem_danh_gia'] = y_kien.diem_danh_gia
+        dict_temp['noi_dung'] = Markup(y_kien.noi_dung)
+        danh_sach_y_kien.append(dict_temp)
+
     chuoi_bo_tag_html = remove_tags(san_pham.mo_ta_chi_tiet)
     chuoi_temp_1 = chuoi_bo_tag_html.split('❖')
-    thong_bao = ''
-    
+        
     if len(chuoi_temp_1) >1:
         chi_tiet = {}
         chi_tiet['xuat_xu'] = chuoi_temp_1[1]
         chi_tiet['dung_tich'] = chuoi_temp_1[2]
     else:
         chi_tiet = ''
-    if form_mua_hang.validate_on_submit():
+    if form_mua_hang.submit_1.data and form_mua_hang.validate_on_submit():
         for item in gio_hang:
             if item['ma_sp'] == ma_sp:
                 item['so_luong'] = form_mua_hang.so_luong.data
@@ -78,9 +97,20 @@ def chi_tiet_san_pham(ma_sp):
             gio_hang.append(sp_don_hang)
             flash('Đã thêm '+ sp_don_hang['ten_sp'] + ' vào giỏ hàng')
         session['Gio_hang'] = gio_hang
-        
+    
+    if form_y_kien.submit_2.data and form_y_kien.is_submitted():
+        y_kien = Y_kien()
+        y_kien.ma_khach_hang = form_y_kien.ma_khach_hang.data
+        y_kien.ma_san_pham = ma_sp
+        y_kien.tieu_de = form_y_kien.tieu_de.data
+        y_kien.diem_danh_gia = form_y_kien.diem_danh_gia.data
+        y_kien.noi_dung = form_y_kien.noi_dung.data
+        y_kien.ngay_tao = datetime.now()
+        db_session.add(y_kien)
+        db_session.commit()
+        flash('Ý kiến của bạn đã được ghi nhận! Mae cảm ơn bạn!')
 
-    return render_template('Web/Chi_tiet_san_pham.html', form_mua_hang = form_mua_hang, mo_ta_dai = mo_ta_dai, chi_tiet = chi_tiet, san_pham = san_pham, danh_sach_category = danh_sach_category)
+    return render_template('Web/Chi_tiet_san_pham.html', danh_sach_y_kien = danh_sach_y_kien, form_y_kien = form_y_kien, form_mua_hang = form_mua_hang, mo_ta_dai = mo_ta_dai, chi_tiet = chi_tiet, san_pham = san_pham, danh_sach_category = danh_sach_category)
 
 @app.route('/xem-gio-hang', methods = ['GET','POST'])
 def xem_gio_hang():

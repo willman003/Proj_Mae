@@ -3,22 +3,24 @@
 {% block title %} {{loai.ten_loai}} {% endblock %}
 
 {% block content %}
+
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>{{loai.ten_loai}}</h1>
+            </div>
+        </div>
+    </div>
+   
+</div>
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb" style="background-color:  white;">
         <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
         <li class="breadcrumb-item active" aria-current="page">{{loai.ten_loai}}</li>
     </ol>
 </nav>
-
-
-
-<div class="container-fluid" style="background-color: whitesmoke;">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>{{loai.ten_loai}}</h1>
-        </div>
-    </div>
-</div>
 <div class="container" style="background-color: white; margin: 50px auto; border-radius: 20px; border: none;">
     <div class="row">
         {%for san_pham in danh_sach_san_pham%}
