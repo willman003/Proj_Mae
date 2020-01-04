@@ -16,6 +16,8 @@ from sqlalchemy.orm import sessionmaker, configure_mappers
 from sqlalchemy import exc
 from flask_sqlalchemy import Pagination
 
+from flask_sqlalchemy import BaseQuery
+
 from Mae.xu_ly.Xu_ly_Model import *
 from Mae.xu_ly.Xu_ly_Form import *
 
@@ -84,18 +86,21 @@ def ql_don_hang():
     if request.form.get('Th_hoa_don'):
         dieu_khien = request.form.get('Th_hoa_don')
         if dieu_khien == 'All':
-            dia_chi = '/QL-don-hang/all'
+            dia_chi = '/QL-don-hang/all/1'
         elif dieu_khien == 'TimKiem':
             dia_chi = '/QL-don-hang/ma-hoa-don'
         elif dieu_khien == 'TheoNgay':
-            dia_chi ='/QL-don-hang/theo-ngay'
+            dia_chi ='/QL-don-hang/theo-ngay/1'
     return render_template('Quan_ly/MH_QL_don_hang.html', hoa_don = hoa_don, tieu_de = tieu_de, dia_chi = dia_chi)
 
-@app.route('/QL-don-hang/all', methods=['GET'])
-def ql_don_hang_all():
-    hoa_don = dbSession.query(Hoa_don).all()
+@app.route('/QL-don-hang/all/<int:page>', methods=['GET'])
+def ql_don_hang_all(page=1):
+    
+    query = BaseQuery(Hoa_don, dbSession)
+    page_filter = query.paginate(page,10,False)
+    
     tieu_de = 'Tất cả đơn hàng'
-    return render_template('Quan_ly/QL_don_hang/QL_don_hang_all.html', hoa_don = hoa_don, tieu_de = tieu_de)
+    return render_template('Quan_ly/QL_don_hang/QL_don_hang_all.html',page_filter = page_filter, tieu_de = tieu_de)
 
 @app.route('/QL-don-hang/ma-hoa-don', methods=['GET','POST'])
 def ql_don_hang_ma_hd():
@@ -112,23 +117,30 @@ def ql_don_hang_ma_hd():
 
     return render_template('Quan_ly/QL_don_hang/QL_don_hang_theo_ma_hd.html', form = form, hoa_don = hoa_don,  tieu_de = tieu_de)
 
-@app.route('/QL-don-hang/theo-ngay', methods=['GET','POST'])
-def ql_don_hang_theo_ngay():
+@app.route('/QL-don-hang/theo-ngay/<int:page>', methods=['GET','POST'])
+def ql_don_hang_theo_ngay(page):
     form = Form_QL_don_hang()
     tieu_de = 'Đơn hàng ngày hôm nay'
     today = datetime.now()
-    hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == today.date()).all()
+    # hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == today.date()).all()
+
+    query = BaseQuery(Hoa_don, dbSession)
+    page_filter = query.filter(Hoa_don.ngay_tao_hoa_don == today.date()).paginate(page,5,False)
+    
 
     if request.method == 'POST':
         ngay_tim_kiem = form.ngay_tim_kiem.data
-        hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == ngay_tim_kiem).all()
-        if len(hoa_don)==0:
+        # hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == ngay_tim_kiem).all()
+        query = BaseQuery(Hoa_don, dbSession)
+        page_filter = query.filter(Hoa_don.ngay_tao_hoa_don == ngay_tim_kiem).paginate(page,5,False)
+        if page_filter.total==0:
             tieu_de = "Không tìm thấy hóa đơn"
 
         else:
             tieu_de = "Đơn hàng của ngày " + str(ngay_tim_kiem.day) + " tháng " +str(ngay_tim_kiem.month)+ " năm " +str(ngay_tim_kiem.year)
-
-    return render_template('Quan_ly/QL_don_hang/QL_don_hang_theo_ngay.html', form = form, hoa_don = hoa_don, tieu_de = tieu_de)
+    
+    
+    return render_template('Quan_ly/QL_don_hang/QL_don_hang_theo_ngay.html', page_filter = page_filter,form = form, tieu_de = tieu_de)
 
 @app.route("/QL-don-hang/hoa-don/hd_<int:ma_hd>", methods = ['GET','POST'])
 def xem_hoa_don(ma_hd):

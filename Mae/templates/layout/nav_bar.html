@@ -16,8 +16,8 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             {%for category in danh_sach_category%}
-                            <a class="dropdown-item" href="/loai_{{category.ma_loai}}">&#9830; {{category.ten_loai}}
-                                {%if id == category.ma_loai%}&#9806;{%endif%}</a>
+                            <a class="dropdown-item {%if id == category.ma_loai%} active {%endif%}" href="/loai_{{category.ma_loai}}">&#9830; {{category.ten_loai}}
+                                </a>
                             {% endfor %}
                         </div>
                     </li>

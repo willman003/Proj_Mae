@@ -5,6 +5,7 @@ from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms import TextField, SubmitField, IntegerField, StringField, PasswordField
 from wtforms import form, fields, validators
+from wtforms.widgets.html5 import NumberInput
 
 import flask_login as login
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -20,7 +21,7 @@ DBsession = sessionmaker(bind = engine)
 dbSession = DBsession()
 
 class Form_mua_hang(FlaskForm):
-    so_luong = IntegerField('Nhập số lượng')
+    so_luong = IntegerField('Nhập số lượng', widget=NumberInput())
     submit_1 = SubmitField('Thêm vào giỏ hàng')
 
 class Form_dang_nhap(FlaskForm):
@@ -90,12 +91,12 @@ class Form_tim_kiem(FlaskForm):
     noi_dung = fields.StringField()
     
 class Form_nhap_hang(FlaskForm):
-    so_luong_nhap = fields.IntegerField()
+    so_luong_nhap = fields.IntegerField(widget=NumberInput())
 
 class Form_y_kien(FlaskForm):
     ma_khach_hang = fields.IntegerField('Mã khách hàng')
     tieu_de = fields.StringField('Tiêu đề')
-    diem_danh_gia = fields.IntegerField('Điểm đánh giá')
+    diem_danh_gia = fields.IntegerField('Điểm đánh giá', widget=NumberInput())
     noi_dung = CKEditorField()
     submit_2 = SubmitField('Gửi ý kiến')
 

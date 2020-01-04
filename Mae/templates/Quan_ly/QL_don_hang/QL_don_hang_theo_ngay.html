@@ -31,7 +31,7 @@
                 </tr>
             </thead>
             <tbody>
-                {%for item in hoa_don%}
+                {%for item in page_filter.items%}
                 <tr>
                     <th scope="row">{{loop.index}}</th>
                     <td>{{item.ma_hoa_don}}</td>
@@ -44,6 +44,24 @@
                 {%endfor%}
             </tbody>
         </table>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                {%if page_filter.has_prev%}
+                  <li class="page-item"><a class="page-link" href="/QL-don-hang/all/{{page_filter.prev_num}}">Trang trước</a></li>
+                {%endif%}
+                {%for i in range(1,page_filter.pages+1)%}
+                  <li class="page-item {%if page_filter.page == i%} active {%endif%}"><a class="page-link" href="/QL-don-hang/all/{{i}}">{{i}}</a></li>
+                {%endfor%}  
+                {%if page_filter.has_next%}
+                  <li class="page-item"><a class="page-link" href="/QL-don-hang/all/{{page_filter.next_num}}">Trang kế</a></li>
+                {%endif%}
+                </ul>
+            </nav>
+
+        </div>
     </div>
 </div>
 {%endblock%}

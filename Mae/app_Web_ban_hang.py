@@ -145,7 +145,7 @@ def xoa_gio_hang(ma_sp):
 def cap_nhat_gio_hang(ma_sp):
     form = Form_mua_hang()
     gio_hang = session['Gio_hang']
-    if form.validate_on_submit():
+    if form.is_submitted():
         for item in gio_hang:
             if item['ma_sp'] == ma_sp:
                 item['so_luong'] = form.so_luong.data
@@ -157,7 +157,7 @@ def cap_nhat_gio_hang(ma_sp):
 @app.route('/dat-hang', methods = ['GET','POST'])
 def dat_hang():
     if not current_user.is_authenticated:
-        return redirect(url_for('log_in'))
+        return redirect(url_for('log_in', next=request.url))
     customer = dbSession.query(Khach_hang).filter(Khach_hang.ma_nguoi_dung == current_user.ma_nguoi_dung).first()
     danh_sach_category = db_session.query(Loai_san_pham).all()
     form = Form_hoa_don()

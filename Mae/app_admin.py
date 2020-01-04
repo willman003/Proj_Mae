@@ -1,6 +1,6 @@
 from Mae import app
 
-from flask import render_template, redirect, url_for, session
+from flask import render_template, redirect, url_for, session, request
 
 from flask_login import current_user, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -23,7 +23,10 @@ def log_in():
         form_dang_nhap.validate_ten_dang_nhap(form_dang_nhap.ten_dang_nhap.data)
         user = form_dang_nhap.get_user()
         login_user(user)
-        return redirect(url_for('index'))
+        if 'next' in request.args:
+            return redirect(request.args.get('next'))
+        else:
+            return redirect(url_for('index'))
         
     return render_template('Quan_ly/MH_Dang_nhap.html', form_dang_nhap = form_dang_nhap)
 

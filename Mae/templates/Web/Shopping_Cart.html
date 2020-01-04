@@ -38,10 +38,10 @@
                                     action="{{url_for('cap_nhat_gio_hang', ma_sp = item['ma_sp'])}}">
                                     {{form.hidden_tag()}}
                                     {{form.so_luong(class="form-control text-center", value=item['so_luong'], style="width: 60px;")}}
-                                    <a title="Cập nhật số lượng" class="btn"
+                                    <button title="Cập nhật số lượng" class="btn"
                                         href="xem-gio-hang/cap-nhat/sp_{{item['ma_sp']}}" type="submit" style="margin: auto 10px; background-color: white;"><i
                                             class="fas fa-sync-alt" style = "margin-right: 5px;"></i>Cập nhật
-                                    </a>
+                                    </button>
                                     <a title="Xóa" href="xem-gio-hang/xoa/sp_{{item['ma_sp']}}">
                                         <i class="far fa-trash-alt" style = "margin-right: 5px;"></i>
                                         Xóa
