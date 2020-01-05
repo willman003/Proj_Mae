@@ -94,6 +94,7 @@ def ql_don_hang():
             dia_chi = '/QL-don-hang/ma-hoa-don'
         elif dieu_khien == 'TheoNgay':
             dia_chi ='/QL-don-hang/theo-ngay/1'
+        
     return render_template('Quan_ly/MH_QL_don_hang.html', hoa_don = hoa_don, tieu_de = tieu_de, dia_chi = dia_chi)
 
 @app.route('/QL-don-hang/all/<int:page>', methods=['GET'])
@@ -104,6 +105,7 @@ def ql_don_hang_all(page=1):
     page_filter = query.paginate(page,10,False)
     
     tieu_de = 'Tất cả đơn hàng'
+    
     return render_template('Quan_ly/QL_don_hang/QL_don_hang_all.html',page_filter = page_filter, tieu_de = tieu_de)
 
 @app.route('/QL-don-hang/ma-hoa-don', methods=['GET','POST'])
@@ -154,7 +156,7 @@ def ql_don_hang_theo_ngay(page):
 def xem_hoa_don(ma_hd):
     if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
         return redirect(url_for('dang_nhap', next=request.url))
-    
+    form = Form_huy_don_hang()
     hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hd).first()
     don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == ma_hd).all()
     khach_hang = dbSession.query(Khach_hang).filter(Khach_hang.ma_khach_hang == hoa_don.ma_khach_hang).first()
@@ -166,7 +168,32 @@ def xem_hoa_don(ma_hd):
         san_pham['don_gia'] = int(item.don_gia.split(',')[0])*1000
         lst_temp.append(san_pham)
     tong_tien = "{:,}".format(int(hoa_don.tong_tien))
-    return render_template('Quan_ly/QL_don_hang/QL_don_hang_chi_tiet.html', hoa_don = hoa_don, don_hang = don_hang, khach_hang = khach_hang, lst_temp =lst_temp, tong_tien = tong_tien)
+    thoi_diem_huy = ''
+    li_do_huy = ''
+    if hoa_don.trang_thai == 2:
+        ghi_chu = hoa_don.ghi_chu
+        chuoi_xu_ly_1 = ghi_chu.split("|")
+        chuoi_xu_ly_2 = chuoi_xu_ly_1[1]
+        chuoi_xu_ly = chuoi_xu_ly_2.split(',')
+        thoi_diem_huy = chuoi_xu_ly[1]
+        li_do_huy = chuoi_xu_ly[2]
+    return render_template('Quan_ly/QL_don_hang/QL_don_hang_chi_tiet.html', thoi_diem_huy = thoi_diem_huy, li_do_huy = li_do_huy, form = form, hoa_don = hoa_don, don_hang = don_hang, khach_hang = khach_hang, lst_temp =lst_temp, tong_tien = tong_tien)
+
+@app.route('/QL-don-hang/huy/bill_<int:ma_hd>', methods = ['GET','POST'])
+def huy_hoa_don(ma_hd):
+    form = Form_huy_don_hang()
+    if form.validate_on_submit():
+        today = datetime.now()
+        hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hd).first()
+        hoa_don.trang_thai = 2
+        if hoa_don.ghi_chu == None:
+            hoa_don.ghi_chu = "| [HỦY], " +today.strftime("%d-%m-%Y %H:%M:%S") + " , " + form.li_do.data
+        else:
+            hoa_don.ghi_chu += "| [HỦY], " +today.strftime("%d-%m-%Y %H:%M:%S") + " , " + form.li_do.data
+
+        dbSession.add(hoa_don)
+        dbSession.commit()
+    return redirect(url_for('xem_hoa_don',ma_hd = ma_hd))
 
 @app.route("/QL-kho", methods = ['GET','POST'])
 def ql_kho():
@@ -240,5 +267,6 @@ admin.add_view(admin_view(Loai_san_pham, dbSession, 'Loại sản phẩm'))
 admin.add_view(san_pham_view(San_pham, dbSession, 'Sản phẩm'))
 admin.add_view(ModelView(Dot_khuyen_mai, dbSession, 'Đợt khuyến mãi'))
 admin.add_view(ModelView(San_pham_khuyen_mai, dbSession, 'Sản phẩm khuyến mãi'))
+admin.add_view(ModelView(Hoa_don, dbSession, 'Hóa đơn'))
 admin.add_view(admin_view(Loai_nguoi_dung, dbSession, 'Loại người dùng'))
 admin.add_view(admin_view(Nguoi_dung, dbSession, 'Người dùng'))

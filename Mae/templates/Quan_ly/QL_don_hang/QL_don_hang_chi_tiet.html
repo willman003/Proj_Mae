@@ -1,4 +1,5 @@
 {%extends 'layout/master_manage.html'%}
+{%block title%} Hóa đơn {{hoa_don.ma_hoa_don}} {%endblock%}
 {%block content%}
     
 <div class="container" style="margin: 20px auto;">
@@ -20,11 +21,26 @@
         <div class="col-md-12">
             Số điện thoại liên lạc: <b>{{hoa_don.so_dien_thoai_nguoi_nhan}}</b>
         </div>
+        {%if hoa_don.ghi_chu != None%}
+        <div class="col-md-12" style="text-decoration: underline;">
+            Ghi chú: <b>{{hoa_don.ghi_chu}}</b>
+        </div>
+        {%endif%}
     </div>
     <div class="row" style="margin: 40px auto;">
         <div class="col-md-12 text-center">
             <h3>Thông tin đơn hàng</h3>
         </div>
+        <div class="col-md-12 text-right">
+            <p {%if hoa_don.trang_thai == 2%} style="color: red;" {%endif%}>Trạng thái: <b> {%if hoa_don.trang_thai == 1%}  Đã thanh toán  {%elif hoa_don.trang_thai == 2%} Hủy {%else%} Chưa thanh toán {%endif%} </b></p>
+        </div>
+        {%if hoa_don.trang_thai == 2%}
+        <div class="col-md-12 text-right">
+            <p><b>Thời điểm hủy:</b> {{thoi_diem_huy}}</p>
+            <p><b>Lí do hủy:</b> {{li_do_huy}}</p>
+        </div>
+        {%endif%}
+        
     </div>
     <div class="row">
         <table class="table text-center">
@@ -65,5 +81,35 @@
             </tbody>
         </table>
     </div>
+    {%if hoa_don.trang_thai == 0%}
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <a class = "btn btn-success" href="/QL-don-hang/hoa-don/hd_{{hoa_don.ma_hoa_don}}" target="_blank" style="color: white;">In hóa đơn</a>
+            <a class="btn btn-danger" style="color:white;" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Hủy đơn hàng</a>
+            
+        </div>
+        
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <form method="POST" action="{{url_for('huy_hoa_don', ma_hd = hoa_don.ma_hoa_don)}}">
+                        <div class="form-group">
+                            <p>Lí do:</p>
+                            {{form.csrf_token}}
+                        </div>
+                        <div class="form-group">
+                            {{form.li_do(class="form-control")}}
+                        </div>
+                        <div class="form-group">
+                            {{form.submit(class="btn btn-danger", style="color:white;")}}
+                        </div>
+                    </form>
+                </div>
+              </div>
+        </div>
+    </div>
+    {%endif%}
 </div>
 {%endblock%}
