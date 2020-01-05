@@ -57,10 +57,11 @@ class san_pham_view(ModelView):
     }
 
 
+
 @app.route('/cong-ty',methods=['GET','POST'])
 def admin():
-    if not current_user.is_authenticated:
-        return redirect(url_for('dang_nhap'))
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     dia_chi_frame = ''
     if request.form.get('Th_Ma_so'):
         man_hinh = request.form.get('Th_Ma_so')
@@ -78,6 +79,8 @@ def admin():
 
 @app.route('/QL-don-hang', methods = ['GET','POST'])
 def ql_don_hang():
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     today = datetime.now()
     ngay_hom_nay = today.date()
     hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == ngay_hom_nay).all()
@@ -95,7 +98,8 @@ def ql_don_hang():
 
 @app.route('/QL-don-hang/all/<int:page>', methods=['GET'])
 def ql_don_hang_all(page=1):
-    
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     query = BaseQuery(Hoa_don, dbSession)
     page_filter = query.paginate(page,10,False)
     
@@ -104,6 +108,8 @@ def ql_don_hang_all(page=1):
 
 @app.route('/QL-don-hang/ma-hoa-don', methods=['GET','POST'])
 def ql_don_hang_ma_hd():
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     form = Form_QL_don_hang()
     hoa_don = []
     tieu_de = ''
@@ -119,6 +125,8 @@ def ql_don_hang_ma_hd():
 
 @app.route('/QL-don-hang/theo-ngay/<int:page>', methods=['GET','POST'])
 def ql_don_hang_theo_ngay(page):
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     form = Form_QL_don_hang()
     tieu_de = 'Đơn hàng ngày hôm nay'
     today = datetime.now()
@@ -144,6 +152,8 @@ def ql_don_hang_theo_ngay(page):
 
 @app.route("/QL-don-hang/hoa-don/hd_<int:ma_hd>", methods = ['GET','POST'])
 def xem_hoa_don(ma_hd):
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     
     hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hd).first()
     don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == ma_hd).all()
@@ -160,6 +170,8 @@ def xem_hoa_don(ma_hd):
 
 @app.route("/QL-kho", methods = ['GET','POST'])
 def ql_kho():
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     dia_chi = ''
     if request.method == 'POST':
         dieu_khien = request.form.get('Th_kho_hang')
@@ -172,6 +184,8 @@ def ql_kho():
 
 @app.route('/QL-kho/nhap-hang',methods=['GET','POST'])
 def ql_kho_nhap():
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     form = Form_tim_kiem()
     san_pham= []
     if request.method == 'POST':
@@ -186,6 +200,8 @@ def ql_kho_nhap():
 
 @app.route('/QL-kho/ton-kho',methods = ['GET','POST'])
 def ql_kho_so_luong():
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     form = Form_tim_kiem()
     san_pham= []
     if request.method == 'POST':
@@ -204,6 +220,8 @@ def ql_kho_so_luong():
 
 @app.route('/QL-kho/nhap/sp_<int:ma_sp>', methods= ['GET','POST'])
 def nhap_san_pham(ma_sp):
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     form = Form_nhap_hang()
     san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == ma_sp).first()
     chuoi_thong_bao = ''
@@ -220,7 +238,7 @@ init_login()
 admin = Admin(app, name = "Admin", index_view=MyAdminIndexView(name="Admin"), template_mode='bootstrap3')
 admin.add_view(admin_view(Loai_san_pham, dbSession, 'Loại sản phẩm'))
 admin.add_view(san_pham_view(San_pham, dbSession, 'Sản phẩm'))
-admin.add_view(san_pham_view(Dot_khuyen_mai, dbSession, 'Đợt khuyến mãi'))
-admin.add_view(san_pham_view(San_pham_khuyen_mai, dbSession, 'Sản phẩm khuyến mãi'))
-# admin.add_view(admin_view(Loai_nguoi_dung, dbSession, 'Loại người dùng'))
-# admin.add_view(admin_view(Nguoi_dung, dbSession, 'Người dùng'))
+admin.add_view(ModelView(Dot_khuyen_mai, dbSession, 'Đợt khuyến mãi'))
+admin.add_view(ModelView(San_pham_khuyen_mai, dbSession, 'Sản phẩm khuyến mãi'))
+admin.add_view(admin_view(Loai_nguoi_dung, dbSession, 'Loại người dùng'))
+admin.add_view(admin_view(Nguoi_dung, dbSession, 'Người dùng'))

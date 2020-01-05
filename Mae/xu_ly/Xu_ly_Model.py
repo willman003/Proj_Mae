@@ -78,6 +78,9 @@ class Nguoi_dung(Base):
 
     def __unicode__(self):
         return self.ho_ten
+    
+    def __str__(self):
+        return self.ten_dang_nhap
 
 class Khach_hang(Base):
     __tablename__ = 'khach_hang'

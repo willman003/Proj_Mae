@@ -44,7 +44,7 @@
         <div class="col-md-4" style="background-color: whitesmoke;">
             <h4 class="text-center">Đơn hàng</h4>
             <hr>
-            {%for item in session['Gio_hang']%}
+            
             <div class="row text-center">
                 <div class="col">
                     <b>STT</b>
@@ -61,6 +61,7 @@
 
             </div>
             <hr>
+            {%for item in session['Gio_hang']%}
             <div class="row text-center">
                 <div class="col">
                     {{loop.index}}
