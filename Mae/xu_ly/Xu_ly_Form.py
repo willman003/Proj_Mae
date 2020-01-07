@@ -80,7 +80,9 @@ class Form_hoa_don(FlaskForm):
         hoa_don.ngay_tao_hoa_don = datetime.now()
         hoa_don.dia_chi_giao_hang = self.dia_chi.data
         hoa_don.so_dien_thoai_nguoi_nhan = self.dien_thoai.data
-        note = "[KHÁCH], " + self.ghi_chu.data
+        note = ''
+        if self.ghi_chu.data != None:
+            note = "[KHÁCH], " + self.ghi_chu.data
         hoa_don.ghi_chu = note
         hoa_don.trang_thai = 0
         dbSession.add(hoa_don)

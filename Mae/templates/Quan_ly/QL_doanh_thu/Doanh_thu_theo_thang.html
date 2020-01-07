@@ -8,16 +8,16 @@
             type: 'bar',
             data: {
                 labels: [
-                    {%for ngay in danh_sach_cac_ngay%}
-                    "{{ngay['ngay_tao_hoa_don']}}",
+                    {%for thang in danh_sach_cac_thang%}
+                    "{{thang['thang']}}",
                     {%endfor%}
                 ],
                 datasets: [{
                     
                     label: 'Doanh thu',
                     data: [
-                    {%for ngay in danh_sach_cac_ngay%}
-                    "{{ ngay['tong_loi_nhuan']}} ",
+                    {%for thang in danh_sach_cac_thang%}
+                    "{{ thang['tong_loi_nhuan']}} ",
                     {%endfor%}
                     ],
                     backgroundColor: [

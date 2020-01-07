@@ -13,7 +13,7 @@ from flask_login import current_user, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from sqlalchemy.orm import sessionmaker, configure_mappers
-from sqlalchemy import exc
+from sqlalchemy import exc,asc,desc
 from flask_sqlalchemy import Pagination
 
 from flask_sqlalchemy import BaseQuery
@@ -104,7 +104,7 @@ def ql_don_hang_all(page=1):
     if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
         return redirect(url_for('dang_nhap', next=request.url))
     query = BaseQuery(Hoa_don, dbSession)
-    page_filter = query.paginate(page,10,False)
+    page_filter = query.order_by(desc(Hoa_don.ngay_tao_hoa_don)).paginate(page,10,False)
     
     tieu_de = 'Tất cả đơn hàng'
     
@@ -186,6 +186,8 @@ def xem_hoa_don(ma_hd):
 
 @app.route("/QL-don-hang/theo-trang-thai/page_<int:id>",methods=['GET','POST'])
 def xem_hd_theo_trang_thai(id):
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     form = Form_lua_chon()
     query = BaseQuery(Hoa_don, dbSession)
     trang_thai = 0
@@ -207,9 +209,22 @@ def xem_hd_theo_trang_thai(id):
     
     return render_template('Quan_ly/QL_don_hang/QL_don_hang_theo_trang_thai.html', tieu_de = tieu_de, page_filter = page_filter, form=form)
 
+@app.route('/QL-don-hang/thanh-toan/hd_<int:ma_hd>', methods=['GET','POST'])
+def thanh_toan(ma_hd):
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
+    today = datetime.now()
+    hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ma_hoa_don == ma_hd).first()
+    hoa_don.trang_thai = 1
+    hoa_don.ghi_chu += "| [ĐÃ THANH TOÁN], " + today.strftime("%d-%m-%Y %H:%M:%S")
+    dbSession.add(hoa_don)
+    dbSession.commit()
+    return redirect(url_for('xem_hoa_don',ma_hd = ma_hd))
 
 @app.route('/QL-don-hang/huy/bill_<int:ma_hd>', methods = ['GET','POST'])
 def huy_hoa_don(ma_hd):
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     form = Form_huy_don_hang()
     if form.validate_on_submit():
         today = datetime.now()
@@ -310,6 +325,8 @@ def xem_doanh_thu():
 
 @app.route('/Ql-doanh-thu/all', methods = ['GET'])
 def xem_doanh_thu_all():
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
     danh_sach_cac_ngay = []
     hoa_don = dbSession.query(Hoa_don).all()
     for item in hoa_don:
@@ -321,15 +338,17 @@ def xem_doanh_thu_all():
     tong_loi_nhuan = 0
     danh_sach_hoa_don = []
     for item in hoa_don:
-        dict_temp = {}
-        don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == item.ma_hoa_don).all()
-        loi_nhuan_1_hoa_don = 0
-        for item_1 in don_hang:
-            san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == item_1.ma_san_pham).first()
-            loi_nhuan_1_hoa_don += (san_pham.gia_ban - san_pham.gia_nhap)*item_1.so_luong
-        dict_temp['ngay_tao_hoa_don'] = item.ngay_tao_hoa_don.strftime("%d-%m-%Y")
-        dict_temp['loi_nhuan'] = loi_nhuan_1_hoa_don
-        danh_sach_hoa_don.append(dict_temp)
+        if item.trang_thai == 1:
+            dict_temp = {}
+            don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == item.ma_hoa_don).all()
+            loi_nhuan_1_hoa_don = 0
+            for item_1 in don_hang:
+                san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == item_1.ma_san_pham).first()
+                loi_nhuan_1_hoa_don += san_pham.gia_ban*item_1.so_luong
+                # loi_nhuan_1_hoa_don += (san_pham.gia_ban - san_pham.gia_nhap)*item_1.so_luong
+            dict_temp['ngay_tao_hoa_don'] = item.ngay_tao_hoa_don.strftime("%d-%m-%Y")
+            dict_temp['loi_nhuan'] = loi_nhuan_1_hoa_don
+            danh_sach_hoa_don.append(dict_temp)
     
     for ngay in danh_sach_cac_ngay:
         loi_nhuan_theo_ngay = 0
@@ -338,9 +357,71 @@ def xem_doanh_thu_all():
                 loi_nhuan_theo_ngay += bill['loi_nhuan']
         ngay['tong_loi_nhuan'] = loi_nhuan_theo_ngay
     # print(danh_sach_cac_ngay)
-
         
     return render_template('Quan_ly/QL_doanh_thu/Doanh_thu_all.html', danh_sach_cac_ngay = danh_sach_cac_ngay)
+
+@app.route("/Ql-doanh-thu/theo-thang", methods=['GET','POST'])
+def doanh_thu_thang():
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
+    danh_sach_cac_thang = []
+    hoa_don = dbSession.query(Hoa_don).all()
+    for item in hoa_don:
+        dict_temp = {}
+        dict_temp['thang'] = item.ngay_tao_hoa_don.strftime("%m-%Y")
+        if dict_temp not in danh_sach_cac_thang:
+            danh_sach_cac_thang.append(dict_temp)
+    
+    tong_loi_nhuan = 0
+    danh_sach_hoa_don = []
+    for item in hoa_don:
+        if item.trang_thai == 1:
+            dict_temp = {}
+            don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == item.ma_hoa_don).all()
+            loi_nhuan_1_hoa_don = 0
+            for item_1 in don_hang:
+                san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == item_1.ma_san_pham).first()
+                loi_nhuan_1_hoa_don += san_pham.gia_ban*item_1.so_luong
+                # loi_nhuan_1_hoa_don += (san_pham.gia_ban - san_pham.gia_nhap)*item_1.so_luong
+            dict_temp['thang'] = item.ngay_tao_hoa_don.strftime("%m-%Y")
+            dict_temp['loi_nhuan'] = loi_nhuan_1_hoa_don
+            danh_sach_hoa_don.append(dict_temp)
+    
+    for ngay in danh_sach_cac_thang:
+        loi_nhuan_theo_thang = 0
+        for bill in danh_sach_hoa_don:
+            if bill['thang'] == ngay['thang']:
+                loi_nhuan_theo_thang += bill['loi_nhuan']
+        ngay['tong_loi_nhuan'] = loi_nhuan_theo_thang
+    return render_template('Quan_ly/QL_doanh_thu/Doanh_thu_theo_thang.html', danh_sach_cac_thang = danh_sach_cac_thang)
+
+@app.route("/Ql-doanh-thu/theo-ngay", methods=['GET','POST'])
+def doanh_thu_ngay():
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
+    today = datetime.now()
+    ds_hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == today.date()).all()
+    dict_sp_trong_ngay = {}
+    tong_doanh_thu = 0
+    for hoa_don in ds_hoa_don:
+        tong_doanh_thu += int(hoa_don.tong_tien)
+        don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == hoa_don.ma_hoa_don).all()
+        for san_pham in don_hang:
+            if san_pham.ma_san_pham not in dict_sp_trong_ngay:
+                dict_sp_trong_ngay[san_pham.ma_san_pham] = san_pham.so_luong
+            else:
+                dict_sp_trong_ngay[san_pham.ma_san_pham] += san_pham.so_luong
+    lst_sp_trong_ngay = []
+    for item in dict_sp_trong_ngay:
+        san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == item).first()
+        dict_temp = {}
+        dict_temp['ma_sp'] = item
+        dict_temp['ten_sp'] = san_pham.ten_san_pham
+        dict_temp['so_luong'] = dict_sp_trong_ngay[item]
+        dict_temp['gia_ban'] = san_pham.gia_ban
+        lst_sp_trong_ngay.append(dict_temp)
+    ngay = "Ngày " + str(today.day) + " Tháng " + str(today.month) + " năm " + str(today.year)
+    return render_template('Quan_ly/QL_doanh_thu/Doanh_thu_theo_ngay.html', ngay = ngay, tong_doanh_thu = tong_doanh_thu, lst_sp_trong_ngay  = lst_sp_trong_ngay)
 
 init_login()
 admin = Admin(app, name = "Admin", index_view=MyAdminIndexView(name="Admin"), template_mode='bootstrap3')

@@ -121,7 +121,7 @@ class Don_hang(Base):
     hoa_don = relationship(Hoa_don, backref = 'don_hang', foreign_keys=[ma_hoa_don])
     san_pham = relationship(San_pham, backref = 'don_hang', foreign_keys=[ma_san_pham])
     def __repr__(self):
-        return '<Ma_san_pham ( id_san_pham = %d )>' % self.ma_san_pham
+        return '<Ma_san_pham = %d>' % self.ma_san_pham
     def get_id(self):
         return self.ma_hoa_don
 
