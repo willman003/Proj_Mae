@@ -158,8 +158,9 @@ class Y_kien(Base):
     ngay_tao = Column(DateTime, nullable=False)
     ma_khach_hang_bai_viet = relationship(Khach_hang, backref='y_kien_kh')
     ma_san_pham_bai_viet = relationship(San_pham, backref = 'y_kien_kh')
-    def __str__(self):
-        return self.id_bai_viet
+    def __repr__(self):
+        return '<Ma_bai_viet (%d)>' % self.id_bai_viet
+    
 
 # class User(db.Model):
 #     	__tablename__='user'

@@ -3,7 +3,7 @@ from Mae import app
 from datetime import datetime
 
 from flask_wtf import FlaskForm
-from wtforms import TextField, SubmitField, IntegerField, StringField, PasswordField
+from wtforms import TextField, SubmitField, IntegerField, StringField, PasswordField, SelectField, DateTimeField
 from wtforms import form, fields, validators
 from wtforms.widgets.html5 import NumberInput
 
@@ -89,7 +89,7 @@ class Form_hoa_don(FlaskForm):
 
 class Form_QL_don_hang(FlaskForm):
     ma_hoa_don_tim_kiem = fields.IntegerField([validators.required()])
-    ngay_tim_kiem = fields.DateField()
+    ngay_tim_kiem = fields.DateField(format='%Y-%m-%d')
 
 class Form_tim_kiem(FlaskForm):
     noi_dung = fields.StringField()
@@ -107,6 +107,10 @@ class Form_y_kien(FlaskForm):
 class Form_huy_don_hang(FlaskForm):
     li_do = fields.TextAreaField()
     submit = fields.SubmitField('Đồng ý')
+
+class Form_lua_chon(FlaskForm):
+    lua_chon = fields.SelectField('Trạng thái:',choices=[('0','Chưa thanh toán'),('1','Đã thanh toán'),('2','Huỷ')])
+    submit = SubmitField('Xem')
 
 def init_login():
 	login_manager = login.LoginManager()

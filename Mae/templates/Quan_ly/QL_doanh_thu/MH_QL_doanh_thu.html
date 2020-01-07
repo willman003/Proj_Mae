@@ -2,7 +2,7 @@
 {%block content%}
 <form method="POST" id="Xem_hoa_don">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/QL-don-hang">Quản lý đơn hàng</a>
+        <a class="navbar-brand" href="/QL-don-hang">Quản lý doanh thu</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -10,12 +10,11 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
 
-                <button onclick="Th_hoa_don.value ='All';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem
-                    tất cả</button>
-                <button onclick="Th_hoa_don.value ='TimKiem';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem theo mã hóa đơn</button>
-                <button onclick="Th_hoa_don.value ='TheoNgay';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem theo ngày</button>
-                <button onclick="Th_hoa_don.value ='TheoTrangThai';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem theo trạng thái hoá đơn</button>
-                <input name="Th_hoa_don" type="hidden">
+                <button onclick="Th_doanh_thu.value ='All';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem tất cả</button>
+                <button onclick="Th_doanh_thu.value ='TheoThang';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem theo tháng</button>
+                <button onclick="Th_doanh_thu.value ='TheoNgay';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem theo ngày</button>
+                <button onclick="Th_doanh_thu.value ='TheoSanPham';Xem_hoa_don.submit()" class="btn btn-info nav-item">Xem theo sản phẩm</button>
+                <input name="Th_doanh_thu" type="hidden">
 
 
 

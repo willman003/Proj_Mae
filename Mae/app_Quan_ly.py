@@ -2,7 +2,7 @@ from Mae import app
 
 from datetime import datetime
 
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, url_for, request, session, flash
 
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -94,6 +94,8 @@ def ql_don_hang():
             dia_chi = '/QL-don-hang/ma-hoa-don'
         elif dieu_khien == 'TheoNgay':
             dia_chi ='/QL-don-hang/theo-ngay/1'
+        elif dieu_khien == 'TheoTrangThai':
+            dia_chi = '/QL-don-hang/theo-trang-thai/page_1'
         
     return render_template('Quan_ly/MH_QL_don_hang.html', hoa_don = hoa_don, tieu_de = tieu_de, dia_chi = dia_chi)
 
@@ -132,24 +134,27 @@ def ql_don_hang_theo_ngay(page):
     form = Form_QL_don_hang()
     tieu_de = 'Đơn hàng ngày hôm nay'
     today = datetime.now()
-    # hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == today.date()).all()
-
-    query = BaseQuery(Hoa_don, dbSession)
-    page_filter = query.filter(Hoa_don.ngay_tao_hoa_don == today.date()).paginate(page,5,False)
-    
-
-    if request.method == 'POST':
+    ngay_tim_kiem = today.date()
+        
+    if session.get('ngay_tim_kiem'):
+        temp_1 = datetime.strptime(session['ngay_tim_kiem'],"%a, %d %b %Y %H:%M:%S %Z")
+        ngay_tim_kiem = temp_1.date()
+    if form.validate_on_submit():
         ngay_tim_kiem = form.ngay_tim_kiem.data
-        # hoa_don = dbSession.query(Hoa_don).filter(Hoa_don.ngay_tao_hoa_don == ngay_tim_kiem).all()
-        query = BaseQuery(Hoa_don, dbSession)
-        page_filter = query.filter(Hoa_don.ngay_tao_hoa_don == ngay_tim_kiem).paginate(page,5,False)
-        if page_filter.total==0:
-            tieu_de = "Không tìm thấy hóa đơn"
+        
+        session['ngay_tim_kiem'] = ngay_tim_kiem
+       
+        page = 1
+    
+    query = BaseQuery(Hoa_don, dbSession)
+    page_filter = query.filter(Hoa_don.ngay_tao_hoa_don == ngay_tim_kiem).paginate(page,5,False)
 
-        else:
-            tieu_de = "Đơn hàng của ngày " + str(ngay_tim_kiem.day) + " tháng " +str(ngay_tim_kiem.month)+ " năm " +str(ngay_tim_kiem.year)
-    
-    
+    if page_filter.total==0:
+        tieu_de = "Không tìm thấy hóa đơn"
+
+    else:
+        tieu_de = "Đơn hàng của ngày " + str(ngay_tim_kiem.day) + " tháng " +str(ngay_tim_kiem.month)+ " năm " +str(ngay_tim_kiem.year)
+   
     return render_template('Quan_ly/QL_don_hang/QL_don_hang_theo_ngay.html', page_filter = page_filter,form = form, tieu_de = tieu_de)
 
 @app.route("/QL-don-hang/hoa-don/hd_<int:ma_hd>", methods = ['GET','POST'])
@@ -178,6 +183,30 @@ def xem_hoa_don(ma_hd):
         thoi_diem_huy = chuoi_xu_ly[1]
         li_do_huy = chuoi_xu_ly[2]
     return render_template('Quan_ly/QL_don_hang/QL_don_hang_chi_tiet.html', thoi_diem_huy = thoi_diem_huy, li_do_huy = li_do_huy, form = form, hoa_don = hoa_don, don_hang = don_hang, khach_hang = khach_hang, lst_temp =lst_temp, tong_tien = tong_tien)
+
+@app.route("/QL-don-hang/theo-trang-thai/page_<int:id>",methods=['GET','POST'])
+def xem_hd_theo_trang_thai(id):
+    form = Form_lua_chon()
+    query = BaseQuery(Hoa_don, dbSession)
+    trang_thai = 0
+    
+    if session.get('trang_thai'):
+        trang_thai = session['trang_thai']
+    
+    if form.validate_on_submit():
+        trang_thai = int(form.lua_chon.data)
+        session['trang_thai'] = trang_thai
+        id = 1
+    if trang_thai == 0:
+        tieu_de = 'Chưa thanh toán'
+    elif trang_thai == 1:
+        tieu_de = 'Đã thanh toán'
+    elif trang_thai == 2:
+        tieu_de = 'Huỷ'
+    page_filter = query.filter(Hoa_don.trang_thai == trang_thai).paginate(id,5,False)
+    
+    return render_template('Quan_ly/QL_don_hang/QL_don_hang_theo_trang_thai.html', tieu_de = tieu_de, page_filter = page_filter, form=form)
+
 
 @app.route('/QL-don-hang/huy/bill_<int:ma_hd>', methods = ['GET','POST'])
 def huy_hoa_don(ma_hd):
@@ -260,6 +289,58 @@ def nhap_san_pham(ma_sp):
         chuoi_thong_bao = "Đã thêm " + str(so_luong_nhap) + " "+ san_pham.ten_san_pham + " vào kho hàng"
     return render_template('Quan_ly/QL_kho_hang/Chi_tiet_nhap_hang.html', chuoi_thong_bao = chuoi_thong_bao, form = form, san_pham = san_pham)
 
+
+@app.route('/Ql-doanh-thu',methods=['GET','POST'])
+def xem_doanh_thu():
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
+    dia_chi = ''
+    if request.method == 'POST':
+        dieu_khien = request.form.get('Th_doanh_thu')
+        if dieu_khien == 'All':
+            dia_chi = '/Ql-doanh-thu/all'
+        elif dieu_khien == 'TheoThang':
+            dia_chi = '/Ql-doanh-thu/theo-thang'
+        elif dieu_khien == 'TheoNgay':
+            dia_chi = '/Ql-doanh-thu/theo-ngay'
+        elif dieu_khien == 'TheoSanPham':
+            dia_chi = '/Ql-doanh-thu/theo-san-pham'
+        
+    return render_template('Quan_ly/QL_doanh_thu/MH_QL_doanh_thu.html', dia_chi = dia_chi)
+
+@app.route('/Ql-doanh-thu/all', methods = ['GET'])
+def xem_doanh_thu_all():
+    danh_sach_cac_ngay = []
+    hoa_don = dbSession.query(Hoa_don).all()
+    for item in hoa_don:
+        dict_temp = {}
+        dict_temp['ngay_tao_hoa_don'] = item.ngay_tao_hoa_don.strftime("%d-%m-%Y")
+        if dict_temp not in danh_sach_cac_ngay:
+            danh_sach_cac_ngay.append(dict_temp)
+    
+    tong_loi_nhuan = 0
+    danh_sach_hoa_don = []
+    for item in hoa_don:
+        dict_temp = {}
+        don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == item.ma_hoa_don).all()
+        loi_nhuan_1_hoa_don = 0
+        for item_1 in don_hang:
+            san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == item_1.ma_san_pham).first()
+            loi_nhuan_1_hoa_don += (san_pham.gia_ban - san_pham.gia_nhap)*item_1.so_luong
+        dict_temp['ngay_tao_hoa_don'] = item.ngay_tao_hoa_don.strftime("%d-%m-%Y")
+        dict_temp['loi_nhuan'] = loi_nhuan_1_hoa_don
+        danh_sach_hoa_don.append(dict_temp)
+    
+    for ngay in danh_sach_cac_ngay:
+        loi_nhuan_theo_ngay = 0
+        for bill in danh_sach_hoa_don:
+            if bill['ngay_tao_hoa_don'] == ngay['ngay_tao_hoa_don']:
+                loi_nhuan_theo_ngay += bill['loi_nhuan']
+        ngay['tong_loi_nhuan'] = loi_nhuan_theo_ngay
+    # print(danh_sach_cac_ngay)
+
+        
+    return render_template('Quan_ly/QL_doanh_thu/Doanh_thu_all.html', danh_sach_cac_ngay = danh_sach_cac_ngay)
 
 init_login()
 admin = Admin(app, name = "Admin", index_view=MyAdminIndexView(name="Admin"), template_mode='bootstrap3')
