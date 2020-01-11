@@ -423,6 +423,33 @@ def doanh_thu_ngay():
     ngay = "Ngày " + str(today.day) + " Tháng " + str(today.month) + " năm " + str(today.year)
     return render_template('Quan_ly/QL_doanh_thu/Doanh_thu_theo_ngay.html', ngay = ngay, tong_doanh_thu = tong_doanh_thu, lst_sp_trong_ngay  = lst_sp_trong_ngay)
 
+@app.route('/Ql-doanh-thu/theo-san-pham', methods = ['GET','POST'])
+def xem_doanh_thu_sp():
+    if not current_user.is_authenticated or current_user.ma_loai_nguoi_dung != 1:
+        return redirect(url_for('dang_nhap', next=request.url))
+    ds_hoa_don = dbSession.query(Hoa_don).all()
+    dict_sp_trong_ngay = {}
+    tong_doanh_thu = 0
+    for hoa_don in ds_hoa_don:
+        tong_doanh_thu += int(hoa_don.tong_tien)
+        don_hang = dbSession.query(Don_hang).filter(Don_hang.ma_hoa_don == hoa_don.ma_hoa_don).all()
+        for san_pham in don_hang:
+            if san_pham.ma_san_pham not in dict_sp_trong_ngay:
+                dict_sp_trong_ngay[san_pham.ma_san_pham] = san_pham.so_luong
+            else:
+                dict_sp_trong_ngay[san_pham.ma_san_pham] += san_pham.so_luong
+    lst_sp_trong_ngay = []
+    for item in dict_sp_trong_ngay:
+        san_pham = dbSession.query(San_pham).filter(San_pham.ma_san_pham == item).first()
+        dict_temp = {}
+        dict_temp['ma_sp'] = item
+        dict_temp['ten_sp'] = san_pham.ten_san_pham
+        dict_temp['so_luong'] = dict_sp_trong_ngay[item]
+        dict_temp['gia_ban'] = san_pham.gia_ban
+        lst_sp_trong_ngay.append(dict_temp)
+       
+    return render_template('Quan_ly/QL_doanh_thu/Doanh_thu_theo_san_pham.html', lst_sp_trong_ngay = lst_sp_trong_ngay)
+
 init_login()
 admin = Admin(app, name = "Admin", index_view=MyAdminIndexView(name="Admin"), template_mode='bootstrap3')
 admin.add_view(admin_view(Loai_san_pham, dbSession, 'Loại sản phẩm'))

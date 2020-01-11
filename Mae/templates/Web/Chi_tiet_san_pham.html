@@ -6,8 +6,8 @@
 
 <script>
     setTimeout(function () {
-        $('#noti').delay(1000).hide(0)
-    }, 1000); // <-- time in milliseconds
+        $('#noti').delay(5000).hide(0)
+    }, 3000); // <-- time in milliseconds
 
 
 </script>
@@ -15,6 +15,7 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        {%if session['id_category']%}
         <li class="breadcrumb-item">
             <a href="/loai_{{session['id_category']}}">
                 {%for category in danh_sach_category%}
@@ -23,6 +24,7 @@
             </a>
 
         </li>
+        {%endif%}
         <li class="breadcrumb-item active" aria-current="page">{{san_pham.ten_san_pham|title}}</li>
     </ol>
 </nav>
